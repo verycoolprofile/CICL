@@ -32,53 +32,66 @@
         }
         .tab-btn {
             background: none; border: none; color: #888; font-size: 18px;
-            font-weight: 900; cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            font-weight: 900; cursor: pointer; transition: 0.4s; 
             padding: 5px 15px; border-radius: 8px; text-transform: uppercase;
         }
         .tab-btn.active { color: #3498db; background: rgba(52, 152, 219, 0.15); transform: scale(1.05); }
 
         .tab-content { display: none; width: 100%; max-width: 800px; z-index: 2; padding: 0 20px 40px 20px; box-sizing: border-box; }
-        .tab-content.active { display: block; animation: tabAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-
-        @keyframes tabAppear { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-content.active { display: block; }
 
         h1 { text-transform: uppercase; letter-spacing: 3px; font-style: italic; text-shadow: 0 0 15px #3498db; text-align: center; }
-        .subtitle { color: #888; margin-bottom: 40px; text-align: center; }
 
         .level-card {
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 12px; margin-bottom: 15px; overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(5px);
+            transition: all 0.4s; backdrop-filter: blur(5px);
         }
-        .level-card:hover { background: rgba(255, 255, 255, 0.07); }
 
-        .rank-1 { border: 2px solid #ffd700 !important; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
-        .rank-2 { border: 2px solid #c0c0c0 !important; box-shadow: 0 0 20px rgba(192, 192, 192, 0.2); }
-        .rank-3 { border: 2px solid #cd7f32 !important; box-shadow: 0 0 20px rgba(205, 127, 50, 0.2); }
+        .rank-1 { border: 2px solid #ffd700 !important; box-shadow: 0 0 20px rgba(255, 215, 0, 0.15); }
+        .rank-2 { border: 2px solid #c0c0c0 !important; }
+        .rank-3 { border: 2px solid #cd7f32 !important; }
         
-        .level-header { padding: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+        .level-header { 
+            padding: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+
+        /* Тёмный шейдер поверх фоновой гифки */
+        .level-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.3) 100%);
+            z-index: -1;
+        }
+
         .level-number { font-size: 28px; font-weight: 900; color: #3498db; min-width: 50px; }
         .rank-1 .level-number { color: #ffd700; }
         .rank-2 .level-number { color: #c0c0c0; }
         .rank-3 .level-number { color: #cd7f32; }
 
-        .level-content { max-height: 0; opacity: 0; transition: all 0.5s ease; background: rgba(0, 0, 0, 0.5); overflow: hidden; }
+        .level-content { max-height: 0; opacity: 0; transition: all 0.5s ease; background: rgba(0, 0, 0, 0.8); overflow: hidden; }
         .level-card.active .level-content { max-height: 1000px; opacity: 1; padding: 20px; }
 
-        .gd-icon {
-            position: fixed; top: -100px; width: 60px; height: 60px;
-            background: url('https://gdbrowser.com/assets/icons/cube.png') no-repeat center;
-            background-size: contain; z-index: 1; pointer-events: none;
-            animation: fall linear forwards;
-        }
-        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
-
         .stats-grid { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.1); }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; background: #000; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
         .tag { background: #000; border: 1px solid #fff; border-radius: 6px; padding: 2px 6px; font-size: 10px; margin-left: 5px; }
         .copy-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+        .rule-box { border-radius: 15px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); }
     </style>
 </head>
 <body>
@@ -86,7 +99,7 @@
     <canvas id="snow-canvas"></canvas>
 
     <h1>Challengegrind ICL</h1>
-    <div class="subtitle">Owned by @verycoolprofile</div>
+    <div style="color: #888; margin-bottom: 40px; text-align: center;">Owned by @verycoolprofile</div>
 
     <div class="tabs-nav">
         <button class="tab-btn active" onclick="openTab('list', this)">List</button>
@@ -98,8 +111,8 @@
     </div>
 
     <div id="rules" class="tab-content">
-        <!-- Блок правил: градиент от прозрачного к синему (направо) -->
-        <div style="background: linear-gradient(to right, rgba(17, 17, 17, 1), rgba(52, 152, 219, 0.2)); border-radius: 15px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px; backdrop-filter: blur(5px);">
+        <!-- Правила с градиентом вправо -->
+        <div class="rule-box" style="background: linear-gradient(to right, rgba(17, 17, 17, 1), rgba(52, 152, 219, 0.2)); margin-bottom: 20px;">
             <h3 style="color:#3498db; text-transform:uppercase; margin-top:0;">Правила:</h3>
             <ul style="list-style:none; padding:0; line-height:2.2;">
                 <li>• Ограничение по <b>CPS: 16</b></li>
@@ -110,36 +123,46 @@
             </ul>
         </div>
 
-        <!-- Блок обозначений: градиент от синего к прозрачному (налево) -->
-        <div style="background: linear-gradient(to left, rgba(17, 17, 17, 1), rgba(52, 152, 219, 0.2)); border-radius: 15px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px);">
+        <!-- Обозначения с градиентом влево -->
+        <div class="rule-box" style="background: linear-gradient(to left, rgba(17, 17, 17, 1), rgba(52, 152, 219, 0.2));">
             <h3 style="color:#3498db; text-transform:uppercase; margin-top:0;">Обозначения:</h3>
             <ul style="list-style:none; padding:0; line-height:1.8;">
                 <li style="margin-bottom: 10px;">
-                    <span class="tag">NME</span> — <b>Needs More Estimations</b> (Место уровня в топе может быть неправильным, требуется больше мнений о сложности)
+                    <span class="tag">NME</span> — <b>Needs More Estimations</b> (Место уровня в топе может быть неточным)
                 </li>
                 <li style="margin-bottom: 10px;">
-                    <span class="tag">LTPS</span> — <b>Lowest TPS</b> (На уровне указан самый низкий тпс на котором уровень возможен)
+                    <span class="tag">LTPS</span> — <b>Lowest TPS</b> (Указан минимальный порог TPS)
                 </li>
             </ul>
         </div>
     </div>
 
     <script>
-        // Данные уровней вшиты прямо в код для стабильности
+        // ДАННЫЕ УРОВНЕЙ
         const levelsData = [
-            { "name": "HOCOK B CMETAHE", "author": "mulpik", "id": "138638436", "wr": "None", "min": "2%", "tps": "9999", "youtubeId": "r8gZdilpu5Q", "tags": ["NME"] },
-            { "name": "Goddamn", "author": "Oiloogd", "id": "131023546", "wr": "None", "min": "2%", "tps": "12193", "youtubeId": "rOPAKjEsFKY" },
-            { "name": "Mig Never Clear", "author": "verycoolprofile", "id": "138844086", "wr": "88%", "min": "88%", "tps": "240", "youtubeId": "0CgbdftJW8o", "tags": ["NME", "LTPS"] },
-            { "name": "Babydoll Perfect", "author": "TururuTuturu", "id": "134223826", "wr": "12% by Pyro", "min": "13%", "tps": "333", "youtubeId": "Ao-eX3jhOUo" },
-            { "name": "Luua", "author": "GmedeChubaka", "id": "135797546", "wr": "65% by Pyro", "min": "65%", "tps": "4944", "youtubeId": "none" },
-            { "name": "Firedust II", "author": "GGbobr", "id": "134760376", "wr": "34% by Pyro", "min": "36%", "tps": "320", "youtubeId": "NtoRdrTl9lU", "tags": ["NME", "LTPS"] },
-            { "name": "Firedust IV", "author": "Ggbobr", "id": "136078246", "wr": "None", "min": "None", "tps": "240", "youtubeId": "4TlBDQL_3GI", "tags": ["NME"] },
-            { "name": "Di3", "author": "GmedeChubaka", "id": "135653646", "wr": "None", "min": "13%", "tps": "???", "youtubeId": "RFRiXOXs2YA" },
-            { "name": "If p2p was 2p", "author": "Itzbatlix", "id": "135743274", "wr": "None", "min": "None", "tps": "???", "youtubeId": "none", "tags": ["NME"] },
-            { "name": "RRRR", "author": "levkalevka", "id": "135543215", "wr": "None", "min": "7%", "tps": "???", "youtubeId": "none", "tags": ["NME"] },
-            { "name": "Shadow Empathy", "author": "Mrnekrongd", "id": "135624161", "wr": "None", "min": "7%", "tps": "???", "youtubeId": "none", "tags": ["NME"] },
-            { "name": "Nine Circles of P2P", "author": "Itzbatlix", "id": "135634595", "wr": "None", "min": "7%", "tps": "???", "youtubeId": "none" },
-            { "name": "Nine Circles of CEX II", "author": "Itzbatlix", "id": "135438326", "wr": "19% by MTSgmd", "min": "???", "tps": "???", "youtubeId": "none" }
+            { 
+                "name": "HOCOK B CMETAHE", 
+                "author": "mulpik", 
+                "id": "138638436", 
+                "bg": "HOCOKBCMETAHE.webp", // Твоя новая гифка
+                "wr": "None", 
+                "min": "2%", 
+                "tps": "9999", 
+                "youtubeId": "r8gZdilpu5Q", 
+                "tags": ["NME"] 
+            },
+            { "name": "Goddamn", "author": "Oiloogd", "id": "131023546", "bg": "", "wr": "None", "min": "2%", "tps": "12193", "youtubeId": "rOPAKjEsFKY" },
+            { "name": "Mig Never Clear", "author": "verycoolprofile", "id": "138844086", "bg": "", "wr": "88%", "min": "88%", "tps": "240", "youtubeId": "0CgbdftJW8o", "tags": ["NME"] },
+            { "name": "Babydoll Perfect", "author": "TururuTuturu", "id": "134223826", "bg": "", "wr": "12% by Pyro", "min": "13%", "tps": "333", "youtubeId": "Ao-eX3jhOUo" },
+            { "name": "Luua", "author": "GmedeChubaka", "id": "135797546", "bg": "", "wr": "65% by Pyro", "min": "65%", "tps": "4944", "youtubeId": "none" },
+            { "name": "Firedust II", "author": "GGbobr", "id": "134760376", "bg": "", "wr": "34% by Pyro", "min": "36%", "tps": "320", "youtubeId": "NtoRdrTl9lU", "tags": ["NME", "LTPS"] },
+            { "name": "Firedust IV", "author": "Ggbobr", "id": "136078246", "bg": "", "wr": "None", "min": "None", "tps": "240", "youtubeId": "4TlBDQL_3GI", "tags": ["NME"] },
+            { "name": "Di3", "author": "GmedeChubaka", "id": "135653646", "bg": "", "wr": "None", "min": "13%", "tps": "???", "youtubeId": "RFRiXOXs2YA" },
+            { "name": "If p2p was 2p", "author": "Itzbatlix", "id": "135743274", "bg": "", "wr": "None", "min": "None", "tps": "???", "youtubeId": "none", "tags": ["NME"] },
+            { "name": "RRRR", "author": "levkalevka", "id": "135543215", "bg": "", "wr": "None", "min": "7%", "tps": "???", "youtubeId": "none", "tags": ["NME"] },
+            { "name": "Shadow Empathy", "author": "Mrnekrongd", "id": "135624161", "bg": "", "wr": "None", "min": "7%", "tps": "???", "youtubeId": "none", "tags": ["NME"] },
+            { "name": "Nine Circles of P2P", "author": "Itzbatlix", "id": "135634595", "bg": "", "wr": "None", "min": "7%", "tps": "???", "youtubeId": "none" },
+            { "name": "Nine Circles of CEX II", "author": "Itzbatlix", "id": "135438326", "bg": "", "wr": "19% by MTSgmd", "min": "???", "tps": "???", "youtubeId": "none" }
         ];
 
         function renderLevels(data) {
@@ -148,20 +171,20 @@
             data.forEach((level, index) => {
                 const rank = index + 1;
                 const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
-                const hasVideo = level.youtubeId && level.youtubeId !== "none";
+                const bgStyle = level.bg ? `style="background-image: url('${level.bg}');"` : '';
                 
                 const card = document.createElement('div');
                 card.className = `level-card ${rankClass}`;
                 card.innerHTML = `
-                    <div class="level-header" onclick="toggleLevel(this.parentElement)">
-                        <div style="display:flex; align-items:center; gap:15px;">
+                    <div class="level-header" ${bgStyle} onclick="toggleLevel(this.parentElement)">
+                        <div style="display:flex; align-items:center; gap:15px; position:relative;">
                             <div class="level-number">${rank}.</div>
                             <div>
-                                <div style="font-size:20px; font-weight:900;">${level.name}</div>
-                                <div style="color:#aaa; font-size:14px;">by ${level.author}</div>
+                                <div style="font-size:20px; font-weight:900; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">${level.name}</div>
+                                <div style="color:#ccc; font-size:14px; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">by ${level.author}</div>
                             </div>
                         </div>
-                        <div style="font-size:12px;">
+                        <div style="font-size:12px; position:relative; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">
                             ID: ${level.id}
                             <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('${level.id}', this)">📋</button>
                         </div>
@@ -171,7 +194,7 @@
                             <div>WR: ${level.wr} | Min: ${level.min}</div>
                             <div>${level.tags ? level.tags.map(t => `<span class="tag">${t}</span>`).join('') : ''} TPS: ${level.tps}</div>
                         </div>
-                        ${hasVideo ? `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe></div>` : '<p style="text-align:center; color:#555;">Видео нет</p>'}
+                        ${level.youtubeId !== "none" ? `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe></div>` : '<p style="text-align:center; color:#555;">Видео нет</p>'}
                     </div>
                 `;
                 container.appendChild(card);
@@ -197,21 +220,7 @@
             btn.classList.add('active');
         }
 
-        // Эффект падающих иконок
-        function spawnIcon() {
-            const icon = document.createElement('div');
-            icon.className = 'gd-icon';
-            const side = Math.random() > 0.5 ? 'left' : 'right';
-            icon.style[side] = (Math.random() * 60) + 'px';
-            icon.style.filter = `hue-rotate(${Math.random() * 360}deg) drop-shadow(0 0 10px rgba(255,255,255,0.3))`;
-            const duration = Math.random() * 3 + 5;
-            icon.style.animationDuration = duration + 's';
-            document.body.appendChild(icon);
-            setTimeout(() => icon.remove(), duration * 1000);
-        }
-        setInterval(spawnIcon, 5000);
-
-        // Снег на фоне
+        // Анимация снега
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
         let flakes = [];
@@ -231,12 +240,8 @@
             });
             requestAnimationFrame(drawSnow);
         }
-
         window.onresize = initSnow;
-        initSnow(); 
-        drawSnow(); 
-        // Запуск отрисовки уровней
-        renderLevels(levelsData);
+        initSnow(); drawSnow(); renderLevels(levelsData);
     </script>
 </body>
 </html>
