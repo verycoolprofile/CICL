@@ -5,16 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Challengegrind Impossible Challenge List</title>
     <style>
-        /* Основной вайб: темный фон и шрифты */
         body {
-            background-color: #0a0a0a;
+            background-color: #050505;
             color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        /* Эффект снега */
+        #snow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
         h1 {
@@ -23,34 +34,46 @@
             font-style: italic;
             text-shadow: 0 0 15px #3498db;
             margin-bottom: 5px;
+            z-index: 1;
         }
 
         .subtitle {
             color: #888;
             margin-bottom: 40px;
+            z-index: 1;
         }
 
         .list-container {
             width: 100%;
             max-width: 800px;
+            z-index: 1;
         }
 
         .level-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             margin-bottom: 15px;
             overflow: hidden;
             transition: all 0.3s ease;
             cursor: pointer;
+            backdrop-filter: blur(5px);
         }
 
         .level-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: #3498db;
-            box-shadow: 0 0 20px rgba(52, 152, 219, 0.2);
+            background: rgba(255, 255, 255, 0.07);
             transform: translateY(-2px);
         }
+
+        /* Цвета для ТОП-3 */
+        .rank-1 { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.15); }
+        .rank-1 .level-number { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
+        
+        .rank-2 { border-color: #c0c0c0; box-shadow: 0 0 15px rgba(192, 192, 192, 0.15); }
+        .rank-2 .level-number { color: #c0c0c0; text-shadow: 0 0 10px #c0c0c0; }
+        
+        .rank-3 { border-color: #cd7f32; box-shadow: 0 0 15px rgba(205, 127, 50, 0.15); }
+        .rank-3 .level-number { color: #cd7f32; text-shadow: 0 0 10px #cd7f32; }
 
         .level-header {
             padding: 20px;
@@ -66,33 +89,29 @@
         }
 
         .level-number {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #3498db;
-            min-width: 40px;
+            min-width: 50px;
         }
 
         .level-name {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
+            letter-spacing: 1px;
         }
 
-        .level-author {
-            color: #aaa;
-            font-size: 14px;
-        }
+        .level-author { color: #aaa; font-size: 14px; }
 
         .level-content {
             max-height: 0;
-            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0 20px;
+            transition: max-height 0.5s ease;
+            background: rgba(0, 0, 0, 0.4);
             overflow: hidden;
         }
 
         .level-card.active .level-content {
             max-height: 1000px;
-            transition: max-height 0.6s ease-in-out;
             padding: 20px;
         }
 
@@ -116,78 +135,123 @@
 
         .video-wrapper iframe {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
         }
     </style>
 </head>
 <body>
 
+    <canvas id="snow-canvas"></canvas>
+
     <h1>Challengegrind ICL</h1>
     <div class="subtitle">Owned by @verycoolprofile</div>
 
-    <div class="list-container">
-        
-        <!-- Уровень 1 -->
-        <div class="level-card" onclick="toggleLevel(this)">
-            <div class="level-header">
-                <div class="level-info">
-                    <div class="level-number">1.</div>
-                    <div>
-                        <div class="level-name">HOCOK B CMETAHE</div>
-                        <div class="level-author">by mulpik</div>
-                    </div>
-                </div>
-                <div class="level-author">ID: 138638436</div>
-            </div>
-            <div class="level-content">
-                <div class="stats-grid">
-                    <div>WR: None | Min: 1%</div>
-                    <div>TPS: 9999</div>
-                </div>
-                <div class="video-wrapper">
-                    <!-- Ссылка исправлена на /embed/ -->
-                    <iframe src="https://www.youtube.com/embed/r8gZdilpu5Q" frameborder="0" allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
-
-        <!-- Уровень 2 -->
-        <div class="level-card" onclick="toggleLevel(this)">
-            <div class="level-header">
-                <div class="level-info">
-                    <div class="level-number">2.</div>
-                    <div>
-                        <div class="level-name">Goddamn</div>
-                        <div class="level-author">by Oiloogd</div>
-                    </div>
-                </div>
-                <div class="level-author">ID: 131023546</div>
-            </div>
-            <div class="level-content">
-                <div class="stats-grid">
-                    <div>WR: None | Min: 2%</div>
-                    <div>TPS: 12193</div>
-                </div>
-                <div class="video-wrapper">
-                    <!-- Ссылка исправлена на /embed/ -->
-                    <iframe src="https://www.youtube.com/embed/rOPAKjEsFKY" frameborder="0" allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
-
+    <div id="levels-list" class="list-container">
+        <!-- Уровни появятся здесь автоматически -->
     </div>
 
     <script>
-        function toggleLevel(card) {
-            document.querySelectorAll('.level-card').forEach(c => {
-                if (c !== card) c.classList.remove('active');
-            });
-            card.classList.toggle('active');
-        }
-    </script>
+        // === КАК ДОБАВЛЯТЬ УРОВНИ ===
+        // Просто добавь новый объект {} в начало или середину списка.
+        // Номера (1, 2, 3...) проставятся сами сверху вниз!
+        const levels = [
+            {
+                name: "HOCOK B CMETAHE",
+                author: "mulpik",
+                id: "138638436",
+                wr: "None",
+                min: "1%",
+                tps: "9999",
+                youtubeId: "r8gZdilpu5Q"
+            },
+            {
+                name: "Goddamn",
+                author: "Oiloogd",
+                id: "131023546",
+                wr: "None",
+                min: "2%",
+                tps: "12193",
+                youtubeId: "rOPAKjEsFKY"
+            }
+        ];
 
+        const listContainer = document.getElementById('levels-list');
+
+        function renderLevels() {
+            listContainer.innerHTML = '';
+            levels.forEach((level, index) => {
+                const rank = index + 1;
+                const rankClass = rank <= 3 ? `rank-${rank}` : '';
+                
+                const card = document.createElement('div');
+                card.className = `level-card ${rankClass}`;
+                card.onclick = () => {
+                    card.classList.toggle('active');
+                };
+
+                card.innerHTML = `
+                    <div class="level-header">
+                        <div class="level-info">
+                            <div class="level-number">${rank}.</div>
+                            <div>
+                                <div class="level-name">${level.name}</div>
+                                <div class="level-author">by ${level.author}</div>
+                            </div>
+                        </div>
+                        <div class="level-author">ID: ${level.id}</div>
+                    </div>
+                    <div class="level-content">
+                        <div class="stats-grid">
+                            <div>WR: ${level.wr} | Min: ${level.min}</div>
+                            <div>TPS: ${level.tps}</div>
+                        </div>
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        // Скрипт снега
+        const canvas = document.getElementById('snow-canvas');
+        const ctx = canvas.getContext('2d');
+        let flakes = [];
+
+        function initSnow() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            flakes = [];
+            for (let i = 0; i < 100; i++) {
+                flakes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 1,
+                    speed: Math.random() * 1 + 0.5,
+                    opacity: Math.random()
+                });
+            }
+        }
+
+        function drawSnow() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            flakes.forEach(f => {
+                ctx.globalAlpha = f.opacity;
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+                ctx.fill();
+                f.y += f.speed;
+                if (f.y > canvas.height) f.y = -5;
+            });
+            requestAnimationFrame(drawSnow);
+        }
+
+        window.onresize = initSnow;
+        initSnow();
+        drawSnow();
+        renderLevels();
+    </script>
 </body>
 </html>
