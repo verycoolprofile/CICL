@@ -27,15 +27,13 @@
 
         .level-card {
             background: rgba(255, 255, 255, 0.03); 
-            /* Рамки для обычных уровней (темно-белый) */
-            border: 1px solid rgba(255, 255, 255, 0.3); 
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Яркая темно-белая рамка */
             border-radius: 12px; margin-bottom: 15px; overflow: hidden;
             transition: transform 0.3s ease, background 0.3s ease;
             backdrop-filter: blur(5px); width: 100%; box-sizing: border-box;
         }
         .level-card:hover { background: rgba(255, 255, 255, 0.07); transform: translateY(-2px); }
 
-        /* Цвета для ТОП-3 */
         .rank-1 { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.15); }
         .rank-2 { border-color: #c0c0c0; box-shadow: 0 0 15px rgba(192, 192, 192, 0.15); }
         .rank-3 { border-color: #cd7f32; box-shadow: 0 0 15px rgba(205, 127, 50, 0.15); }
@@ -78,14 +76,14 @@
 
         .video-wrapper {
             position: relative; padding-bottom: 56.25%; height: 0;
-            border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.5);
-            margin-bottom: 10px;
+            border-radius: 8px; overflow: hidden; background: #000;
+            margin-top: 10px;
         }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        .no-showcase-text {
-            color: #777; font-size: 14px; text-align: center;
-            padding: 20px 0; font-style: italic; border-top: 1px solid rgba(255,255,255,0.05);
+        .no-showcase-msg {
+            text-align: center; color: #777; font-size: 13px; font-style: italic;
+            padding: 15px; border-top: 1px solid rgba(255,255,255,0.05);
         }
     </style>
 </head>
@@ -99,13 +97,14 @@
     <div id="levels-list" class="list-container"></div>
 
     <script>
+        // Чтобы убрать видео, просто пиши youtubeId: "none"
         const levels = [
             { name: "HOCOK B CMETAHE", author: "mulpik", id: "138638436", wr: "None", min: "2%", tps: "9999", youtubeId: "r8gZdilpu5Q", tags: ["NME"] },
             { name: "Goddamn", author: "Oiloogd", id: "131023546", wr: "None", min: "2%", tps: "12193", youtubeId: "rOPAKjEsFKY" },
             { name: "Mig Never Clear", author: "verycoolprofile", id: "138844086", wr: "88%", min: "88%", tps: "240", youtubeId: "0CgbdftJW8o", tags: ["NME"] },
-            { name: "Babydoll Perfect", author: "TururuTuturu", id: "134223826", wr: "12% by Pyro", min: "13%", tps: "333", youtubeId: "T7MhM9_kZlY" },
+            { name: "Babydoll Perfect", author: "TururuTuturu", id: "134223826", wr: "12% by Pyro", min: "13%", tps: "333", youtubeId: "none" },
             { name: "Luua", author: "GmedeChubaka", id: "135797546", wr: "65% by Pyro", min: "65%", tps: "4944", youtubeId: "u_y65HlE-qA" },
-            { name: "Firedust II", author: "GGbobr", id: "134760376", wr: "34% by Pyro", min: "36%", tps: "320", youtubeId: "YmD9o7mZc9U", tags: ["NME", "LTPS"] },
+            { name: "Firedust II", author: "GGbobr", id: "134760376", wr: "34% by Pyro", min: "36%", tps: "320", youtubeId: "none", tags: ["NME", "LTPS"] },
             { name: "Firedust IV", author: "Ggbobr", id: "136078246", wr: "None", min: "None", tps: "240", youtubeId: "6mU7eXW_Vsc" },
             { name: "Di3", author: "GmedeChubaka", id: "135653646", wr: "None", min: "13%", tps: "???", youtubeId: "none" },
             { name: "If p2p was 2p", author: "Itzbatlix", id: "135743274", wr: "None", min: "None", tps: "???", youtubeId: "none", tags: ["NME"] },
@@ -142,10 +141,8 @@
                     });
                 }
 
-                // Логика: если youtubeId "none", показываем только текст. Если есть ID — показываем видео-блок.
-                const mediaHtml = level.youtubeId === "none" 
-                    ? `<div class="no-showcase-text">Шоукейса нет :) если хотите добавить свой шоукейс на данный уровень пишите @verycoolprofile в тг</div>`
-                    : `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe></div>`;
+                // Проверка: если в ID видео меньше 5 символов или это "none", считаем, что видео нет
+                const hasVideo = level.youtubeId && level.youtubeId.length > 5 && level.youtubeId !== "none";
 
                 const card = document.createElement('div');
                 card.className = `level-card ${rankClass}`;
@@ -171,7 +168,10 @@
                                 <span style="margin-left: 5px;">TPS: ${level.tps}</span>
                             </div>
                         </div>
-                        ${mediaHtml}
+                        ${hasVideo 
+                            ? `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe></div>` 
+                            : `<div class="no-showcase-msg">Шоукейса нет :) если хотите добавить свой шоукейс на данный уровень пишите @verycoolprofile в тг</div>`
+                        }
                     </div>
                 `;
                 listContainer.appendChild(card);
