@@ -60,12 +60,11 @@
             cursor: pointer;
             position: relative;
             z-index: 1;
-            /* Настройки масштаба фона */
-            background-size: 100% auto; 
-            background-position: center 25%;
+            /* Идеальные настройки для широкоформатных баннеров */
+            background-size: cover; 
+            background-position: center;
             background-repeat: no-repeat;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
+            image-rendering: auto; 
         }
 
         .level-header::before {
@@ -137,7 +136,7 @@
                 "name": "HOCOK B CMETAHE", 
                 "author": "mulpik", 
                 "id": "138638436", 
-                "bg": "banners/HOCOKBCMETAHE.webp", // Путь к папке banners
+                "bg": "banners/HOCOKBCMETAHE.webp", 
                 "wr": "None", 
                 "min": "2%", 
                 "tps": "9999", 
