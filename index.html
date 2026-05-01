@@ -60,19 +60,19 @@
             cursor: pointer;
             position: relative;
             z-index: 1;
-            background-size: cover;
-            background-position: center;
+            /* Настройки масштаба фона */
+            background-size: 100% auto; 
+            background-position: center 25%;
             background-repeat: no-repeat;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
         }
 
-        /* Тёмный шейдер поверх фоновой гифки */
         .level-header::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(90deg, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.3) 100%);
+            background: linear-gradient(90deg, rgba(5, 5, 5, 0.85) 0%, rgba(5, 5, 5, 0.2) 100%);
             z-index: -1;
         }
 
@@ -111,40 +111,33 @@
     </div>
 
     <div id="rules" class="tab-content">
-        <!-- Правила с градиентом вправо -->
         <div class="rule-box" style="background: linear-gradient(to right, rgba(17, 17, 17, 1), rgba(52, 152, 219, 0.2)); margin-bottom: 20px;">
             <h3 style="color:#3498db; text-transform:uppercase; margin-top:0;">Правила:</h3>
             <ul style="list-style:none; padding:0; line-height:2.2;">
                 <li>• Ограничение по <b>CPS: 16</b></li>
                 <li>• Больше <b>3 кликов в 1 фрейме</b> запрещено</li>
-                <li>• TPS минимум <b>240</b> (если возможно)</li>
+                <li>• TPS минимум <b>240</b></li>
                 <li>• Читы запрещены (кроме <b>TPS Bypass</b>)</li>
                 <li>• TPS выше <b>100к</b> запрещено</li>
             </ul>
         </div>
 
-        <!-- Обозначения с градиентом влево -->
         <div class="rule-box" style="background: linear-gradient(to left, rgba(17, 17, 17, 1), rgba(52, 152, 219, 0.2));">
             <h3 style="color:#3498db; text-transform:uppercase; margin-top:0;">Обозначения:</h3>
             <ul style="list-style:none; padding:0; line-height:1.8;">
-                <li style="margin-bottom: 10px;">
-                    <span class="tag">NME</span> — <b>Needs More Estimations</b> (Место уровня в топе может быть неточным)
-                </li>
-                <li style="margin-bottom: 10px;">
-                    <span class="tag">LTPS</span> — <b>Lowest TPS</b> (Указан минимальный порог TPS)
-                </li>
+                <li style="margin-bottom: 10px;"><span class="tag">NME</span> — <b>Needs More Estimations</b></li>
+                <li><span class="tag">LTPS</span> — <b>Lowest TPS</b></li>
             </ul>
         </div>
     </div>
 
     <script>
-        // ДАННЫЕ УРОВНЕЙ
         const levelsData = [
             { 
                 "name": "HOCOK B CMETAHE", 
                 "author": "mulpik", 
                 "id": "138638436", 
-                "bg": "HOCOKBCMETAHE.webp", // Твоя новая гифка
+                "bg": "banners/HOCOKBCMETAHE.webp", // Путь к папке banners
                 "wr": "None", 
                 "min": "2%", 
                 "tps": "9999", 
@@ -180,11 +173,11 @@
                         <div style="display:flex; align-items:center; gap:15px; position:relative;">
                             <div class="level-number">${rank}.</div>
                             <div>
-                                <div style="font-size:20px; font-weight:900; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">${level.name}</div>
-                                <div style="color:#ccc; font-size:14px; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">by ${level.author}</div>
+                                <div style="font-size:18px; font-weight:900; text-shadow: 2px 2px 5px rgba(0,0,0,1);">${level.name}</div>
+                                <div style="color:#ccc; font-size:13px; text-shadow: 1px 1px 3px rgba(0,0,0,1);">by ${level.author}</div>
                             </div>
                         </div>
-                        <div style="font-size:12px; position:relative; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">
+                        <div style="font-size:11px; position:relative; text-shadow: 1px 1px 3px rgba(0,0,0,1); color: rgba(255,255,255,0.7);">
                             ID: ${level.id}
                             <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('${level.id}', this)">📋</button>
                         </div>
@@ -220,7 +213,7 @@
             btn.classList.add('active');
         }
 
-        // Анимация снега
+        // Снег
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
         let flakes = [];
