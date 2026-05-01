@@ -26,13 +26,16 @@
         .list-container { width: 100%; max-width: 800px; z-index: 1; box-sizing: border-box; }
 
         .level-card {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03); 
+            /* Рамки для обычных уровней (темно-белый) */
+            border: 1px solid rgba(255, 255, 255, 0.3); 
             border-radius: 12px; margin-bottom: 15px; overflow: hidden;
             transition: transform 0.3s ease, background 0.3s ease;
             backdrop-filter: blur(5px); width: 100%; box-sizing: border-box;
         }
         .level-card:hover { background: rgba(255, 255, 255, 0.07); transform: translateY(-2px); }
 
+        /* Цвета для ТОП-3 */
         .rank-1 { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.15); }
         .rank-2 { border-color: #c0c0c0; box-shadow: 0 0 15px rgba(192, 192, 192, 0.15); }
         .rank-3 { border-color: #cd7f32; box-shadow: 0 0 15px rgba(205, 127, 50, 0.15); }
@@ -75,14 +78,14 @@
 
         .video-wrapper {
             position: relative; padding-bottom: 56.25%; height: 0;
-            border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.02);
-            display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; overflow: hidden; background: rgba(0,0,0,0.5);
+            margin-bottom: 10px;
         }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        .no-showcase {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; color: #888; font-size: 14px; width: 80%; line-height: 1.5;
+        .no-showcase-text {
+            color: #777; font-size: 14px; text-align: center;
+            padding: 20px 0; font-style: italic; border-top: 1px solid rgba(255,255,255,0.05);
         }
     </style>
 </head>
@@ -139,13 +142,10 @@
                     });
                 }
 
-                // Логика отображения видео или заглушки
-                let videoContent = '';
-                if (level.youtubeId === "none") {
-                    videoContent = `<div class="no-showcase">Шоукейса нет :) если хотите добавить свой шоукейс на данный уровень пишите @verycoolprofile в тг</div>`;
-                } else {
-                    videoContent = `<iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe>`;
-                }
+                // Логика: если youtubeId "none", показываем только текст. Если есть ID — показываем видео-блок.
+                const mediaHtml = level.youtubeId === "none" 
+                    ? `<div class="no-showcase-text">Шоукейса нет :) если хотите добавить свой шоукейс на данный уровень пишите @verycoolprofile в тг</div>`
+                    : `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe></div>`;
 
                 const card = document.createElement('div');
                 card.className = `level-card ${rankClass}`;
@@ -171,9 +171,7 @@
                                 <span style="margin-left: 5px;">TPS: ${level.tps}</span>
                             </div>
                         </div>
-                        <div class="video-wrapper">
-                            ${videoContent}
-                        </div>
+                        ${mediaHtml}
                     </div>
                 `;
                 listContainer.appendChild(card);
