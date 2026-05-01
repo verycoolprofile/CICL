@@ -60,13 +60,13 @@
             cursor: pointer;
             position: relative;
             z-index: 1;
-            /* Растягиваем ровно на 100% ширины и высоты рамки */
-            background-size: 100% 100%; 
+            /* Возвращаем cover, чтобы сохранить пропорции без искажений */
+            background-size: cover; 
+            /* Центрируем, чтобы основной геймплей был в середине */
             background-position: center;
             background-repeat: no-repeat;
-            /* Убираем лишнее сглаживание, чтобы сохранить четкость пикселей GD */
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
+            /* Оставляем четкость пикселей */
+            image-rendering: -webkit-optimize-contrast;
         }
 
         .level-header::before {
