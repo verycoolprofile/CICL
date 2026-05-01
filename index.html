@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challengegrind Impossible Challenge List</title>
+    <style>
+        /* Основной вайб: темный фон и шрифты */
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-style: italic;
+            text-shadow: 0 0 15px #3498db;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        /* Контейнер для списка */
+        .list-container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* Карточка уровня (Glassmorphism) */
+        .level-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .level-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #3498db;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Шапка карточки */
+        .level-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .level-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .level-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+            min-width: 40px;
+        }
+
+        .level-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .level-author {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        /* Выдвигающийся блок (Аккордеон) */
+        .level-content {
+            max-height: 0;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0 20px;
+        }
+
+        .level-card.active .level-content {
+            max-height: 1000px;
+            transition: max-height 1s ease-in-out;
+            padding: 20px;
+        }
+
+        /* Стили для данных внутри */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Challengegrind ICL</h1>
+    <div class="subtitle">Owned by @verycoolprofile</div>
+
+    <div class="list-container">
+        
+        <!-- Уровень 1 -->
+        <div class="level-card" onclick="toggleLevel(this)">
+            <div class="level-header">
+                <div class="level-info">
+                    <div class="level-number">1.</div>
+                    <div>
+                        <div class="level-name">HOCOK B CMETAHE</div>
+                        <div class="level-author">by mulpik</div>
+                    </div>
+                </div>
+                <div class="level-author">ID: 138638436</div>
+            </div>
+            <div class="level-content">
+                <div class="stats-grid">
+                    <div>WR: None | Min: 1%</div>
+                    <div>TPS: 9999</div>
+                </div>
+                <div class="video-wrapper">
+                    <!-- Замени ID_ВИДЕО на реальный ID из ссылки ютуба -->
+                    <iframe src="https://www.youtube.com/watch?v=r8gZdilpu5Q" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Уровень 2 -->
+        <div class="level-card" onclick="toggleLevel(this)">
+            <div class="level-header">
+                <div class="level-info">
+                    <div class="level-number">2.</div>
+                    <div>
+                        <div class="level-name">Goddamn</div>
+                        <div class="level-author">by Oiloogd</div>
+                    </div>
+                </div>
+                <div class="level-author">ID: 131023546</div>
+            </div>
+            <div class="level-content">
+                <div class="stats-grid">
+                    <div>WR: None | Min: 2%</div>
+                    <div>TPS: 12193</div>
+                </div>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/watch?v=rOPAKjEsFKY" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleLevel(card) {
+            // Закрываем другие карточки (если хочешь, чтобы только одна была открыта)
+            document.querySelectorAll('.level-card').forEach(c => {
+                if (c !== card) c.classList.remove('active');
+            });
+            // Переключаем текущую
+            card.classList.toggle('active');
+        }
+    </script>
+
+</body>
+</html>
