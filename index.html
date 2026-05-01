@@ -30,13 +30,11 @@
             margin-bottom: 40px;
         }
 
-        /* Контейнер для списка */
         .list-container {
             width: 100%;
             max-width: 800px;
         }
 
-        /* Карточка уровня (Glassmorphism) */
         .level-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -54,7 +52,6 @@
             transform: translateY(-2px);
         }
 
-        /* Шапка карточки */
         .level-header {
             padding: 20px;
             display: flex;
@@ -85,13 +82,12 @@
             font-size: 14px;
         }
 
-        /* Выдвигающийся блок (Аккордеон) */
         .level-content {
             max-height: 0;
             transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
             background: rgba(0, 0, 0, 0.3);
             padding: 0 20px;
-            overflow: hidden; /* Важно для анимации */
+            overflow: hidden;
         }
 
         .level-card.active .level-content {
@@ -100,7 +96,6 @@
             padding: 20px;
         }
 
-        /* Стили для данных внутри */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -112,7 +107,7 @@
 
         .video-wrapper {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
+            padding-bottom: 56.25%;
             height: 0;
             border-radius: 8px;
             overflow: hidden;
@@ -153,8 +148,8 @@
                     <div>TPS: 9999</div>
                 </div>
                 <div class="video-wrapper">
-                    <!-- Используем /embed/ вместо /watch?v= -->
-                    <iframe src="[https://www.youtube.com/embed/r8gZdilpu5Q](https://www.youtube.com/embed/r8gZdilpu5Q)" frameborder="0" allowfullscreen></iframe>
+                    <!-- Ссылка исправлена на /embed/ -->
+                    <iframe src="https://www.youtube.com/embed/r8gZdilpu5Q" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -177,8 +172,8 @@
                     <div>TPS: 12193</div>
                 </div>
                 <div class="video-wrapper">
-                    <!-- Используем /embed/ вместо /watch?v= -->
-                    <iframe src="[https://www.youtube.com/embed/rOPAKjEsFKY](https://www.youtube.com/embed/rOPAKjEsFKY)" frameborder="0" allowfullscreen></iframe>
+                    <!-- Ссылка исправлена на /embed/ -->
+                    <iframe src="https://www.youtube.com/embed/rOPAKjEsFKY" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -187,11 +182,9 @@
 
     <script>
         function toggleLevel(card) {
-            // Закрываем другие карточки
             document.querySelectorAll('.level-card').forEach(c => {
                 if (c !== card) c.classList.remove('active');
             });
-            // Переключаем текущую
             card.classList.toggle('active');
         }
     </script>
