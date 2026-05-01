@@ -19,12 +19,12 @@
             flex-direction: column;
             align-items: center;
             padding: 40px 20px;
-            /* Убираем горизонтальный скролл полностью */
-            overflow-x: hidden;
-            width: 100vw;
+            /* Исправляем горизонтальный скролл */
+            overflow-x: hidden; 
+            width: 100%; /* Вместо 100vw используем 100%, чтобы не вылезать за границы */
             box-sizing: border-box;
         }
-
+        
         /* Красивый тонкий скроллбар, чтобы не мозолил глаза */
         ::-webkit-scrollbar {
             width: 8px;
@@ -176,7 +176,7 @@
                 id: "138844086",
                 wr: "88%",
                 min: "88%",
-                tps: "240", // Поправил ТПС тут
+                tps: "240",
                 youtubeId: "0CgbdftJW8o"
             }
         ];
