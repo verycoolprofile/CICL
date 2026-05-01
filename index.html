@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Challengegrind Impossible Challenge List</title>
     <style>
-        /* Стилизация скроллбара */
+        /* Твой стильный скроллбар */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { 
@@ -16,10 +16,9 @@
 
         html { overflow-y: scroll; scroll-behavior: smooth; }
         body {
-            background-color: #050505; 
-            color: #ffffff;
+            background-color: #050505; color: #ffffff;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-weight: 600; /* Делаем текст полужирным */
+            font-weight: 700; /* Жирный шрифт для всего сайта */
             margin: 0; display: flex; flex-direction: column; align-items: center;
             padding-top: 40px; overflow-x: hidden; width: 100%; box-sizing: border-box;
         }
@@ -34,7 +33,7 @@
         }
         .tab-btn {
             background: none; border: none; color: #888; font-size: 18px;
-            font-weight: 800; cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            font-weight: 900; cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
             padding: 5px 15px; border-radius: 8px; text-transform: uppercase;
         }
         .tab-btn.active { color: #3498db; background: rgba(52, 152, 219, 0.15); transform: scale(1.05); }
@@ -42,10 +41,7 @@
         .tab-content { display: none; width: 100%; max-width: 800px; z-index: 2; padding: 0 20px 40px 20px; box-sizing: border-box; }
         .tab-content.active { display: block; animation: tabAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        @keyframes tabAppear { 
-            from { opacity: 0; transform: translateY(15px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+        @keyframes tabAppear { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         h1 { text-transform: uppercase; letter-spacing: 3px; font-style: italic; text-shadow: 0 0 15px #3498db; text-align: center; }
         .subtitle { color: #888; margin-bottom: 40px; text-align: center; }
@@ -58,10 +54,9 @@
         }
         .level-card:hover { background: rgba(255, 255, 255, 0.07); }
 
-        /* Цвета для топ-3 */
-        .rank-1 { border: 2px solid #ffd700 !important; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
-        .rank-2 { border: 2px solid #c0c0c0 !important; box-shadow: 0 0 15px rgba(192, 192, 192, 0.2); }
-        .rank-3 { border: 2px solid #cd7f32 !important; box-shadow: 0 0 15px rgba(205, 127, 50, 0.2); }
+        .rank-1 { border: 2px solid #ffd700 !important; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+        .rank-2 { border: 2px solid #c0c0c0 !important; box-shadow: 0 0 20px rgba(192, 192, 192, 0.2); }
+        .rank-3 { border: 2px solid #cd7f32 !important; box-shadow: 0 0 20px rgba(205, 127, 50, 0.2); }
         
         .level-header { padding: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
         .level-number { font-size: 28px; font-weight: 900; color: #3498db; min-width: 50px; }
@@ -69,30 +64,24 @@
         .rank-2 .level-number { color: #c0c0c0; }
         .rank-3 .level-number { color: #cd7f32; }
 
-        .level-content { 
-            max-height: 0; opacity: 0; transition: all 0.5s ease; 
-            background: rgba(0, 0, 0, 0.5); overflow: hidden; 
-        }
+        .level-content { max-height: 0; opacity: 0; transition: all 0.5s ease; background: rgba(0, 0, 0, 0.5); overflow: hidden; }
         .level-card.active .level-content { max-height: 1000px; opacity: 1; padding: 20px; }
 
-        /* Падающие иконки */
+        /* Падающие иконки GD */
         .gd-icon {
             position: fixed; top: -100px; width: 60px; height: 60px;
-            background-image: url('https://gdbrowser.com/assets/icons/cube.png');
-            background-size: contain; background-repeat: no-repeat;
-            z-index: 1; pointer-events: none;
+            background: url('https://gdbrowser.com/assets/icons/cube.png') no-repeat center;
+            background-size: contain; z-index: 1; pointer-events: none;
             animation: fall linear forwards;
         }
-        @keyframes fall {
-            to { transform: translateY(110vh) rotate(720deg); }
-        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
 
-        .stats-grid { display: flex; justify-content: space-between; margin-bottom: 20px; color: #eee; }
+        .stats-grid { display: flex; justify-content: space-between; margin-bottom: 20px; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.1); }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
-        .tag { background: #000; border: 1px solid #fff; border-radius: 6px; padding: 2px 6px; font-size: 10px; }
-        .copy-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        .tag { background: #000; border: 1px solid #fff; border-radius: 6px; padding: 2px 6px; font-size: 10px; margin-left: 5px; }
+        .copy-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -108,57 +97,58 @@
     </div>
 
     <div id="list" class="tab-content active">
+        <div id="loading-text" style="text-align:center; color:#3498db;">Загрузка уровней с Pastebin...</div>
         <div id="levels-list"></div>
     </div>
 
     <div id="rules" class="tab-content">
-        <!-- Тот же крутой дизайн правил -->
         <div style="background: #111; border-radius: 15px; padding: 25px; border: 1px solid #222;">
-            <h3 style="color:#3498db; text-transform:uppercase; margin-top:0;">Правила челлендж листа:</h3>
-            <ul style="list-style:none; padding:0; line-height:2;">
+            <h3 style="color:#3498db; text-transform:uppercase; margin-top:0;">Правила:</h3>
+            <ul style="list-style:none; padding:0; line-height:2.2;">
                 <li>• Ограничение по <b>CPS: 16</b></li>
                 <li>• Больше <b>3 кликов в 1 фрейме</b> запрещено</li>
-                <li>• Использование <b>TPS ниже 240</b> запрещено</li>
-                <li>• Читы запрещены (исключение: <b>TPS Bypass</b>)</li>
+                <li>• TPS минимум <b>240</b> (если возможно)</li>
+                <li>• Читы запрещены (кроме <b>TPS Bypass</b>)</li>
+                <li>• TPS выше <b>100к</b> запрещено</li>
             </ul>
         </div>
     </div>
 
     <script>
-        const levels = [
-            { name: "HOCOK B CMETAHE", author: "mulpik", id: "138638436", wr: "None", min: "2%", tps: "9999", youtubeId: "r8gZdilpu5Q", tags: ["NME"] },
-            { name: "Goddamn", author: "Oiloogd", id: "131023546", wr: "None", min: "2%", tps: "12193", youtubeId: "rOPAKjEsFKY" },
-            { name: "Mig Never Clear", author: "verycoolprofile", id: "138844086", wr: "88%", min: "88%", tps: "240", youtubeId: "0CgbdftJW8o", tags: ["NME"] },
-            { name: "Babydoll Perfect", author: "TururuTuturu", id: "134223826", wr: "12% by Pyro", min: "13%", tps: "333", youtubeId: "none" },
-            { name: "Luua", author: "GmedeChubaka", id: "135797546", wr: "65% by Pyro", min: "65%", tps: "4944", youtubeId: "u_y65HlE-qA" },
-            { name: "Firedust II", author: "GGbobr", id: "134760376", wr: "34% by Pyro", min: "36%", tps: "320", youtubeId: "none", tags: ["NME", "LTPS"] },
-            { name: "Firedust IV", author: "Ggbobr", id: "136078246", wr: "None", min: "None", tps: "240", youtubeId: "6mU7eXW_Vsc" },
-            { name: "Di3", author: "GmedeChubaka", id: "135653646", wr: "None", min: "13%", tps: "???", youtubeId: "none" },
-            { name: "If p2p was 2p", author: "Itzbatlix", id: "135743274", wr: "None", min: "None", tps: "???", youtubeId: "none", tags: ["NME"] },
-            { name: "RRRR", author: "levkalevka", id: "135543215", wr: "None", min: "7%", tps: "???", youtubeId: "none", tags: ["NME"] },
-            { name: "Shadow Empathy", author: "Mrnekrongd", id: "135624161", wr: "None", min: "7%", tps: "???", youtubeId: "none", tags: ["NME"] },
-            { name: "Nine Circles of P2P", author: "Itzbatlix", id: "135634595", wr: "None", min: "7%", tps: "???", youtubeId: "none" },
-            { name: "Nine Circles of CEX II", author: "Itzbatlix", id: "135438326", wr: "19% by MTSgmd", min: "???", tps: "???", youtubeId: "none" }
-        ];
+        // ВСТАВЬ СВОЮ ССЫЛКУ С PASTEBIN СЮДА (ОБЯЗАТЕЛЬНО RAW!)
+        const PASTEBIN_URL = 'https://pastebin.com/raw/ВАШ_ID'; 
 
-        function openTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
+        async function loadLevels() {
+            try {
+                // Если ссылки еще нет, используем временные данные, чтобы ничего не ломалось
+                let data;
+                if (PASTEBIN_URL.includes('ВАШ_ID')) {
+                    data = [
+                        { name: "HOCOK B CMETAHE", author: "mulpik", id: "138638436", wr: "None", min: "2%", tps: "9999", youtubeId: "r8gZdilpu5Q", tags: ["NME"] },
+                        { name: "Goddamn", author: "Oiloogd", id: "131023546", wr: "None", min: "2%", tps: "12193", youtubeId: "rOPAKjEsFKY" },
+                        { name: "Mig Never Clear", author: "verycoolprofile", id: "138844086", wr: "88%", min: "88%", tps: "240", youtubeId: "0CgbdftJW8o", tags: ["NME"] }
+                    ];
+                    console.log("Используются встроенные данные. Замените PASTEBIN_URL.");
+                } else {
+                    const response = await fetch(PASTEBIN_URL);
+                    data = await response.json();
+                }
+                
+                document.getElementById('loading-text').style.display = 'none';
+                renderLevels(data);
+            } catch (e) {
+                document.getElementById('loading-text').innerHTML = "Ошибка загрузки данных. Проверьте ссылку.";
+            }
         }
 
-        function renderLevels() {
+        function renderLevels(data) {
             const container = document.getElementById('levels-list');
             container.innerHTML = '';
-            levels.forEach((level, index) => {
+            data.forEach((level, index) => {
                 const rank = index + 1;
-                let rankClass = '';
-                if(rank === 1) rankClass = 'rank-1';
-                else if(rank === 2) rankClass = 'rank-2';
-                else if(rank === 3) rankClass = 'rank-3';
-
+                const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
                 const hasVideo = level.youtubeId && level.youtubeId !== "none";
+                
                 const card = document.createElement('div');
                 card.className = `level-card ${rankClass}`;
                 card.innerHTML = `
@@ -178,9 +168,9 @@
                     <div class="level-content">
                         <div class="stats-grid">
                             <div>WR: ${level.wr} | Min: ${level.min}</div>
-                            <div>TPS: ${level.tps}</div>
+                            <div>${level.tags ? level.tags.map(t => `<span class="tag">${t}</span>`).join('') : ''} TPS: ${level.tps}</div>
                         </div>
-                        ${hasVideo ? `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe></div>` : '<p style="text-align:center; color:#555;">Шоукейса пока нет</p>'}
+                        ${hasVideo ? `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe></div>` : '<p style="text-align:center; color:#555;">Видео нет</p>'}
                     </div>
                 `;
                 container.appendChild(card);
@@ -199,13 +189,19 @@
             setTimeout(() => btn.innerHTML = '📋', 1000);
         }
 
+        function openTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
         function spawnIcon() {
             const icon = document.createElement('div');
             icon.className = 'gd-icon';
             const side = Math.random() > 0.5 ? 'left' : 'right';
-            icon.style[side] = (Math.random() * 50) + 'px';
-            const hue = Math.floor(Math.random() * 360);
-            icon.style.filter = `hue-rotate(${hue}deg) drop-shadow(0 0 10px rgba(255,255,255,0.3))`;
+            icon.style[side] = (Math.random() * 60) + 'px';
+            icon.style.filter = `hue-rotate(${Math.random() * 360}deg) drop-shadow(0 0 10px rgba(255,255,255,0.3))`;
             const duration = Math.random() * 3 + 5;
             icon.style.animationDuration = duration + 's';
             document.body.appendChild(icon);
@@ -214,6 +210,7 @@
 
         setInterval(spawnIcon, 5000);
 
+        // Снег
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
         let flakes = [];
@@ -235,7 +232,7 @@
         }
 
         window.onresize = initSnow;
-        initSnow(); drawSnow(); renderLevels(); spawnIcon();
+        initSnow(); drawSnow(); loadLevels();
     </script>
 </body>
 </html>
