@@ -115,29 +115,26 @@
     </div>
 
     <script>
-        // ВСТАВЬ СВОЮ ССЫЛКУ С PASTEBIN СЮДА (ОБЯЗАТЕЛЬНО RAW!)
-        const PASTEBIN_URL = 'https://pastebin.com/raw/gKu8Xy1J'; 
+        // Использование прокси для обхода CORS
+        const PASTEBIN_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://pastebin.com/raw/gKu8Xy1J'); 
 
         async function loadLevels() {
             try {
-                // Если ссылки еще нет, используем временные данные, чтобы ничего не ломалось
-                let data;
-                if (PASTEBIN_URL.includes('ВАШ_ID')) {
-                    data = [
-                        { name: "HOCOK B CMETAHE", author: "mulpik", id: "138638436", wr: "None", min: "2%", tps: "9999", youtubeId: "r8gZdilpu5Q", tags: ["NME"] },
-                        { name: "Goddamn", author: "Oiloogd", id: "131023546", wr: "None", min: "2%", tps: "12193", youtubeId: "rOPAKjEsFKY" },
-                        { name: "Mig Never Clear", author: "verycoolprofile", id: "138844086", wr: "88%", min: "88%", tps: "240", youtubeId: "0CgbdftJW8o", tags: ["NME"] }
-                    ];
-                    console.log("Используются встроенные данные. Замените PASTEBIN_URL.");
-                } else {
-                    const response = await fetch(PASTEBIN_URL);
-                    data = await response.json();
-                }
+                const response = await fetch(PASTEBIN_URL);
+                if (!response.ok) throw new Error('Network response was not ok');
                 
-                document.getElementById('loading-text').style.display = 'none';
+                const data = await response.json();
+                
+                // Убираем текст загрузки и отрисовываем уровни
+                const loadingText = document.getElementById('loading-text');
+                if (loadingText) loadingText.style.display = 'none';
+                
                 renderLevels(data);
             } catch (e) {
-                document.getElementById('loading-text').innerHTML = "Ошибка загрузки данных. Проверьте ссылку.";
+                console.error("Ошибка:", e);
+                document.getElementById('loading-text').innerHTML = 
+                    "Ошибка загрузки данных. Убедись, что JSON на Pastebin валиден (проверь запятые!).";
+                document.getElementById('loading-text').style.color = "#ff4d4d";
             }
         }
 
