@@ -60,11 +60,13 @@
             cursor: pointer;
             position: relative;
             z-index: 1;
-            /* Идеальные настройки для широкоформатных баннеров */
-            background-size: cover; 
+            /* Растягиваем ровно на 100% ширины и высоты рамки */
+            background-size: 100% 100%; 
             background-position: center;
             background-repeat: no-repeat;
-            image-rendering: auto; 
+            /* Убираем лишнее сглаживание, чтобы сохранить четкость пикселей GD */
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
 
         .level-header::before {
