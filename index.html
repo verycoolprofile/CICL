@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Challengegrind Impossible Challenge List</title>
     <style>
+        /* Фикс прыжка контента: всегда резервируем место под скроллбар */
+        html {
+            overflow-y: scroll;
+        }
+
         body {
             background-color: #050505;
             color: #ffffff;
@@ -14,7 +19,25 @@
             flex-direction: column;
             align-items: center;
             padding: 40px 20px;
+            /* Убираем горизонтальный скролл полностью */
             overflow-x: hidden;
+            width: 100vw;
+            box-sizing: border-box;
+        }
+
+        /* Красивый тонкий скроллбар, чтобы не мозолил глаза */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #222;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3498db;
         }
 
         #snow-canvas {
@@ -32,9 +55,15 @@
             z-index: 1;
         }
 
-        .subtitle { color: #888; margin-bottom: 40px; z-index: 1; }
+        .subtitle { color: #888; margin-bottom: 40px; z-index: 1; text-align: center; }
 
-        .list-container { width: 100%; max-width: 800px; z-index: 1; }
+        .list-container { 
+            width: 100%; 
+            max-width: 800px; 
+            z-index: 1; 
+            /* Фикс для предотвращения микро-изменений размера */
+            box-sizing: border-box; 
+        }
 
         .level-card {
             background: rgba(255, 255, 255, 0.03);
@@ -42,8 +71,10 @@
             border-radius: 12px;
             margin-bottom: 15px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
             backdrop-filter: blur(5px);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .level-card:hover { background: rgba(255, 255, 255, 0.07); transform: translateY(-2px); }
@@ -61,6 +92,7 @@
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
+            user-select: none;
         }
 
         .level-info { display: flex; align-items: center; gap: 15px; }
@@ -68,7 +100,6 @@
         .level-name { font-size: 22px; font-weight: bold; letter-spacing: 1px; }
         .level-author { color: #aaa; font-size: 14px; }
 
-        /* Кнопка копирования */
         .copy-btn {
             background: rgba(255,255,255,0.1);
             border: none;
@@ -84,16 +115,20 @@
 
         .level-content {
             max-height: 0;
-            transition: max-height 0.5s ease;
+            transition: max-height 0.4s ease-out, padding 0.4s ease;
             background: rgba(0, 0, 0, 0.4);
             overflow: hidden;
+            padding: 0 20px; /* Плавное появление паддинга */
         }
 
-        .level-card.active .level-content { max-height: 1000px; padding: 20px; }
+        .level-card.active .level-content { 
+            max-height: 800px; 
+            padding: 20px; 
+        }
 
         .stats-grid {
             display: flex;
-            justify-content: space-between; /* Выравнивание по краям */
+            justify-content: space-between;
             margin-bottom: 20px;
             font-size: 14px;
             color: #ccc;
@@ -103,7 +138,7 @@
             position: relative; padding-bottom: 56.25%; height: 0;
             border-radius: 8px; overflow: hidden; background: #000;
         }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
