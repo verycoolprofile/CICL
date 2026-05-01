@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Challengegrind Impossible Challenge List</title>
     <style>
-        /* Твой стильный скроллбар */
+        /* Стили скроллбара */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { 
@@ -18,14 +18,13 @@
         body {
             background-color: #050505; color: #ffffff;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-weight: 700; /* Жирный шрифт для всего сайта */
+            font-weight: 700;
             margin: 0; display: flex; flex-direction: column; align-items: center;
             padding-top: 40px; overflow-x: hidden; width: 100%; box-sizing: border-box;
         }
         
         #snow-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
-        /* Вкладки */
         .tabs-nav {
             display: flex; gap: 20px; margin-bottom: 30px; z-index: 10;
             background: rgba(255, 255, 255, 0.05); padding: 10px 20px;
@@ -46,7 +45,6 @@
         h1 { text-transform: uppercase; letter-spacing: 3px; font-style: italic; text-shadow: 0 0 15px #3498db; text-align: center; }
         .subtitle { color: #888; margin-bottom: 40px; text-align: center; }
 
-        /* Карточки уровней и ТОП-3 */
         .level-card {
             background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 12px; margin-bottom: 15px; overflow: hidden;
@@ -67,7 +65,6 @@
         .level-content { max-height: 0; opacity: 0; transition: all 0.5s ease; background: rgba(0, 0, 0, 0.5); overflow: hidden; }
         .level-card.active .level-content { max-height: 1000px; opacity: 1; padding: 20px; }
 
-        /* Падающие иконки GD */
         .gd-icon {
             position: fixed; top: -100px; width: 60px; height: 60px;
             background: url('https://gdbrowser.com/assets/icons/cube.png') no-repeat center;
@@ -76,7 +73,7 @@
         }
         @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
 
-        .stats-grid { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .stats-grid { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; background: #000; border: 1px solid rgba(255,255,255,0.1); }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
@@ -97,7 +94,6 @@
     </div>
 
     <div id="list" class="tab-content active">
-        <div id="loading-text" style="text-align:center; color:#3498db;">Загрузка уровней с Pastebin...</div>
         <div id="levels-list"></div>
     </div>
 
@@ -115,28 +111,22 @@
     </div>
 
     <script>
-        // Использование прокси для обхода CORS
-        const PASTEBIN_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://pastebin.com/raw/gKu8Xy1J'); 
-
-        async function loadLevels() {
-            try {
-                const response = await fetch(PASTEBIN_URL);
-                if (!response.ok) throw new Error('Network response was not ok');
-                
-                const data = await response.json();
-                
-                // Убираем текст загрузки и отрисовываем уровни
-                const loadingText = document.getElementById('loading-text');
-                if (loadingText) loadingText.style.display = 'none';
-                
-                renderLevels(data);
-            } catch (e) {
-                console.error("Ошибка:", e);
-                document.getElementById('loading-text').innerHTML = 
-                    "Ошибка загрузки данных. Убедись, что JSON на Pastebin валиден (проверь запятые!).";
-                document.getElementById('loading-text').style.color = "#ff4d4d";
-            }
-        }
+        // Данные уровней вшиты прямо в код для стабильности
+        const levelsData = [
+            { "name": "HOCOK B CMETAHE", "author": "mulpik", "id": "138638436", "wr": "None", "min": "2%", "tps": "9999", "youtubeId": "r8gZdilpu5Q", "tags": ["NME"] },
+            { "name": "Goddamn", "author": "Oiloogd", "id": "131023546", "wr": "None", "min": "2%", "tps": "12193", "youtubeId": "rOPAKjEsFKY" },
+            { "name": "Mig Never Clear", "author": "verycoolprofile", "id": "138844086", "wr": "88%", "min": "88%", "tps": "240", "youtubeId": "0CgbdftJW8o", "tags": ["NME"] },
+            { "name": "Babydoll Perfect", "author": "TururuTuturu", "id": "134223826", "wr": "12% by Pyro", "min": "13%", "tps": "333", "youtubeId": "Ao-eX3jhOUo" },
+            { "name": "Luua", "author": "GmedeChubaka", "id": "135797546", "wr": "65% by Pyro", "min": "65%", "tps": "4944", "youtubeId": "none" },
+            { "name": "Firedust II", "author": "GGbobr", "id": "134760376", "wr": "34% by Pyro", "min": "36%", "tps": "320", "youtubeId": "NtoRdrTl9lU", "tags": ["NME", "LTPS"] },
+            { "name": "Firedust IV", "author": "Ggbobr", "id": "136078246", "wr": "None", "min": "None", "tps": "240", "youtubeId": "4TlBDQL_3GI", "tags": ["NME"] },
+            { "name": "Di3", "author": "GmedeChubaka", "id": "135653646", "wr": "None", "min": "13%", "tps": "???", "youtubeId": "RFRiXOXs2YA" },
+            { "name": "If p2p was 2p", "author": "Itzbatlix", "id": "135743274", "wr": "None", "min": "None", "tps": "???", "youtubeId": "none", "tags": ["NME"] },
+            { "name": "RRRR", "author": "levkalevka", "id": "135543215", "wr": "None", "min": "7%", "tps": "???", "youtubeId": "none", "tags": ["NME"] },
+            { "name": "Shadow Empathy", "author": "Mrnekrongd", "id": "135624161", "wr": "None", "min": "7%", "tps": "???", "youtubeId": "none", "tags": ["NME"] },
+            { "name": "Nine Circles of P2P", "author": "Itzbatlix", "id": "135634595", "wr": "None", "min": "7%", "tps": "???", "youtubeId": "none" },
+            { "name": "Nine Circles of CEX II", "author": "Itzbatlix", "id": "135438326", "wr": "19% by MTSgmd", "min": "???", "tps": "???", "youtubeId": "none" }
+        ];
 
         function renderLevels(data) {
             const container = document.getElementById('levels-list');
@@ -193,6 +183,7 @@
             btn.classList.add('active');
         }
 
+        // Эффект падающих иконок
         function spawnIcon() {
             const icon = document.createElement('div');
             icon.className = 'gd-icon';
@@ -204,10 +195,9 @@
             document.body.appendChild(icon);
             setTimeout(() => icon.remove(), duration * 1000);
         }
-
         setInterval(spawnIcon, 5000);
 
-        // Снег
+        // Снег на фоне
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
         let flakes = [];
@@ -229,7 +219,10 @@
         }
 
         window.onresize = initSnow;
-        initSnow(); drawSnow(); loadLevels();
+        initSnow(); 
+        drawSnow(); 
+        // Запуск отрисовки уровней
+        renderLevels(levelsData);
     </script>
 </body>
 </html>
