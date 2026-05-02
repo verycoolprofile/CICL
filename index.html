@@ -25,6 +25,18 @@
         
         #snow-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
+        /* СТИЛЬНЫЙ ТОГГЛ СНЕГА */
+        .snow-control {
+            position: fixed; top: 20px; left: 20px; z-index: 100;
+            background: rgba(255, 255, 255, 0.05); padding: 8px 15px;
+            border-radius: 10px; backdrop-filter: blur(10px);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            font-size: 12px; display: flex; align-items: center; gap: 8px;
+            cursor: pointer; transition: 0.3s;
+        }
+        .snow-control:hover { border-color: #3498db; }
+        .snow-control input { cursor: pointer; }
+
         .tabs-nav {
             display: flex; gap: 20px; margin-bottom: 30px; z-index: 10;
             background: rgba(255, 255, 255, 0.05); padding: 10px 20px;
@@ -60,13 +72,11 @@
             cursor: pointer;
             position: relative;
             z-index: 1;
-            /* Возвращаем cover, чтобы сохранить пропорции без искажений */
             background-size: cover; 
-            /* Центрируем, чтобы основной геймплей был в середине */
             background-position: center;
             background-repeat: no-repeat;
-            /* Оставляем четкость пикселей */
             image-rendering: -webkit-optimize-contrast;
+            transition: background-image 0.2s ease;
         }
 
         .level-header::before {
@@ -96,6 +106,10 @@
     </style>
 </head>
 <body>
+
+    <label class="snow-control">
+        <input type="checkbox" id="optimize-snow"> Optimize snow
+    </label>
 
     <canvas id="snow-canvas"></canvas>
 
@@ -134,18 +148,8 @@
 
     <script>
         const levelsData = [
-            { 
-                "name": "HOCOK B CMETAHE", 
-                "author": "mulpik", 
-                "id": "138638436", 
-                "bg": "banners/HOCOKBCMETAHE.webp", 
-                "wr": "None", 
-                "min": "2%", 
-                "tps": "9999", 
-                "youtubeId": "r8gZdilpu5Q", 
-                "tags": ["NME"] 
-            },
-            { "name": "Goddamn", "author": "Oiloogd", "id": "131023546", "bg": "banners/Goddamn.webp", "wr": "None", "min": "2%", "tps": "12193", "youtubeId": "rOPAKjEsFKY" },
+            { "name": "HOCOK B CMETAHE", "author": "mulpik", "id": "138638436", "bg": "HOCOKBCMETAHE.webp", "wr": "None", "min": "2%", "tps": "9999", "youtubeId": "r8gZdilpu5Q", "tags": ["NME"] },
+            { "name": "Goddamn", "author": "Oiloogd", "id": "131023546", "bg": "Goddamn.webp", "wr": "None", "min": "2%", "tps": "12193", "youtubeId": "rOPAKjEsFKY" },
             { "name": "Mig Never Clear", "author": "verycoolprofile", "id": "138844086", "bg": "", "wr": "88%", "min": "88%", "tps": "240", "youtubeId": "0CgbdftJW8o", "tags": ["NME"] },
             { "name": "Babydoll Perfect", "author": "TururuTuturu", "id": "134223826", "bg": "", "wr": "12% by Pyro", "min": "13%", "tps": "333", "youtubeId": "Ao-eX3jhOUo" },
             { "name": "Luua", "author": "GmedeChubaka", "id": "135797546", "bg": "", "wr": "65% by Pyro", "min": "65%", "tps": "4944", "youtubeId": "none" },
@@ -165,12 +169,23 @@
             data.forEach((level, index) => {
                 const rank = index + 1;
                 const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
-                const bgStyle = level.bg ? `style="background-image: url('${level.bg}');"` : '';
+                
+                // Пути:banners/name.webp и banners/static/name.png
+                const animImg = level.bg ? `banners/${level.bg}` : '';
+                const staticImg = level.bg ? `banners/static/${level.bg.replace('.webp', '.png')}` : '';
+                const bgStyle = staticImg ? `style="background-image: url('${staticImg}');"` : '';
                 
                 const card = document.createElement('div');
                 card.className = `level-card ${rankClass}`;
+                card.dataset.yt = level.youtubeId;
+                card.dataset.anim = animImg;
+                card.dataset.static = staticImg;
+
                 card.innerHTML = `
-                    <div class="level-header" ${bgStyle} onclick="toggleLevel(this.parentElement)">
+                    <div class="level-header" ${bgStyle} 
+                         onclick="toggleLevel(this.parentElement)"
+                         onmouseenter="playGif(this)" 
+                         onmouseleave="stopGif(this)">
                         <div style="display:flex; align-items:center; gap:15px; position:relative;">
                             <div class="level-number">${rank}.</div>
                             <div>
@@ -188,17 +203,43 @@
                             <div>WR: ${level.wr} | Min: ${level.min}</div>
                             <div>${level.tags ? level.tags.map(t => `<span class="tag">${t}</span>`).join('') : ''} TPS: ${level.tps}</div>
                         </div>
-                        ${level.youtubeId !== "none" ? `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe></div>` : '<p style="text-align:center; color:#555;">Видео нет</p>'}
+                        <div class="video-container"></div>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
+        // Функции для ГИФОК при наведении
+        function playGif(header) {
+            const anim = header.parentElement.dataset.anim;
+            if(anim) header.style.backgroundImage = `url('${anim}')`;
+        }
+        function stopGif(header) {
+            const static = header.parentElement.dataset.static;
+            if(static) header.style.backgroundImage = `url('${static}')`;
+        }
+
+        // Ленивая загрузка видео
         function toggleLevel(card) {
             const isActive = card.classList.contains('active');
-            document.querySelectorAll('.level-card').forEach(c => c.classList.remove('active'));
-            if (!isActive) card.classList.add('active');
+            const videoContainer = card.querySelector('.video-container');
+            const ytId = card.dataset.yt;
+
+            // Сначала закрываем все другие
+            document.querySelectorAll('.level-card').forEach(c => {
+                c.classList.remove('active');
+                c.querySelector('.video-container').innerHTML = '';
+            });
+
+            if (!isActive) {
+                card.classList.add('active');
+                if (ytId && ytId !== "none") {
+                    videoContainer.innerHTML = `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" frameborder="0" allowfullscreen></iframe></div>`;
+                } else {
+                    videoContainer.innerHTML = '<p style="text-align:center; color:#555;">Видео нет</p>';
+                }
+            }
         }
 
         function copyToClipboard(text, btn) {
@@ -214,17 +255,21 @@
             btn.classList.add('active');
         }
 
-        // Снег
+        // Снег с оптимизацией
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
+        const snowOpt = document.getElementById('optimize-snow');
         let flakes = [];
+
         function initSnow() {
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            flakes = Array.from({length: 100}, () => ({
+            const count = snowOpt.checked ? 20 : 100; // Уменьшаем до 20 если чекнуто
+            flakes = Array.from({length: count}, () => ({
                 x: Math.random() * canvas.width, y: Math.random() * canvas.height,
                 size: Math.random() * 3 + 1, speed: Math.random() * 1 + 0.5, opacity: Math.random()
             }));
         }
+
         function drawSnow() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             flakes.forEach(f => {
@@ -234,6 +279,8 @@
             });
             requestAnimationFrame(drawSnow);
         }
+
+        snowOpt.addEventListener('change', initSnow);
         window.onresize = initSnow;
         initSnow(); drawSnow(); renderLevels(levelsData);
     </script>
