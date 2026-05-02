@@ -3,137 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challengegrind ICL</title>
+    <title>Challengegrind Impossible Challenge List</title>
     <style>
-        :root {
-            --bg-color: #050505;
-            --card-bg: #111111;
-            --accent: #00fbff;
-            --text: #ffffff;
+        /* Стили скроллбара */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(to bottom, #222, #3498db); 
+            border-radius: 10px; 
+            border: 2px solid #050505;
         }
 
+        html { overflow-y: scroll; scroll-behavior: smooth; }
         body {
-            margin: 0; padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text);
-            font-family: 'Arial', sans-serif;
-            overflow-x: hidden;
+            background-color: #050505; color: #ffffff;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 700;
+            margin: 0; display: flex; flex-direction: column; align-items: center;
+            padding-top: 40px; overflow-x: hidden; width: 100%; box-sizing: border-box;
         }
+        
+        #snow-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
-        canvas { position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none; }
-
-        /* Настройка снега */
-        .snow-toggle {
-            position: fixed; top: 20px; left: 20px;
-            z-index: 100; background: rgba(0,0,0,0.7);
-            padding: 10px; border-radius: 8px;
-            font-size: 12px; border: 1px solid var(--accent);
+        .tabs-nav {
+            display: flex; gap: 20px; margin-bottom: 30px; z-index: 10;
+            background: rgba(255, 255, 255, 0.05); padding: 10px 20px;
+            border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .container { max-width: 950px; margin: 40px auto; padding: 0 20px; }
-
-        .main-title {
-            text-align: center; font-size: 48px; font-weight: 900;
-            text-transform: uppercase; letter-spacing: 5px;
-            color: var(--accent);
-            text-shadow: 0 0 20px rgba(0, 251, 255, 0.6);
-            margin-bottom: 30px;
-        }
-
-        /* Вкладки */
-        .tabs { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
         .tab-btn {
-            background: none; border: 2px solid var(--accent);
-            color: var(--accent); padding: 10px 30px;
-            cursor: pointer; font-weight: bold; border-radius: 5px;
-            transition: 0.3s;
+            background: none; border: none; color: #888; font-size: 18px;
+            font-weight: 900; cursor: pointer; transition: 0.4s; 
+            padding: 5px 15px; border-radius: 8px; text-transform: uppercase;
         }
-        .tab-btn.active { background: var(--accent); color: #000; }
-        .tab-content { display: none; }
+        .tab-btn.active { color: #3498db; background: rgba(52, 152, 219, 0.15); transform: scale(1.05); }
+
+        .tab-content { display: none; width: 100%; max-width: 800px; z-index: 2; padding: 0 20px 40px 20px; box-sizing: border-box; }
         .tab-content.active { display: block; }
 
-        /* Карточки уровней */
+        h1 { text-transform: uppercase; letter-spacing: 3px; font-style: italic; text-shadow: 0 0 15px #3498db; text-align: center; }
+
         .level-card {
-            background: var(--card-bg); border-radius: 10px;
-            margin-bottom: 15px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px; margin-bottom: 15px; overflow: hidden;
+            transition: all 0.4s; backdrop-filter: blur(5px);
         }
 
-        .level-header {
-            padding: 20px; cursor: pointer;
-            background-size: cover; background-position: center;
-            display: flex; justify-content: space-between; align-items: center;
-            position: relative; min-height: 90px;
+        .rank-1 { border: 2px solid #ffd700 !important; box-shadow: 0 0 20px rgba(255, 215, 0, 0.15); }
+        .rank-2 { border: 2px solid #c0c0c0 !important; }
+        .rank-3 { border: 2px solid #cd7f32 !important; }
+        
+        .level-header { 
+            padding: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            /* Возвращаем cover, чтобы сохранить пропорции без искажений */
+            background-size: cover; 
+            /* Центрируем, чтобы основной геймплей был в середине */
+            background-position: center;
+            background-repeat: no-repeat;
+            /* Оставляем четкость пикселей */
+            image-rendering: -webkit-optimize-contrast;
         }
 
         .level-header::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 100%);
-            z-index: 1;
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, rgba(5, 5, 5, 0.85) 0%, rgba(5, 5, 5, 0.2) 100%);
+            z-index: -1;
         }
 
-        .header-info { position: relative; z-index: 2; display: flex; align-items: center; }
-        .level-number { font-size: 28px; font-weight: 900; color: var(--accent); margin-right: 20px; }
+        .level-number { font-size: 28px; font-weight: 900; color: #3498db; min-width: 50px; }
+        .rank-1 .level-number { color: #ffd700; }
+        .rank-2 .level-number { color: #c0c0c0; }
+        .rank-3 .level-number { color: #cd7f32; }
 
-        .level-content {
-            max-height: 0; overflow: hidden;
-            transition: max-height 0.5s ease; /* Плавное открытие */
-            background: rgba(255,255,255,0.02);
-        }
+        .level-content { max-height: 0; opacity: 0; transition: all 0.5s ease; background: rgba(0, 0, 0, 0.8); overflow: hidden; }
+        .level-card.active .level-content { max-height: 1000px; opacity: 1; padding: 20px; }
 
-        .level-card.active .level-content { max-height: 1200px; padding: 20px; }
+        .stats-grid { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; background: #000; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        
+        .tag { background: #000; border: 1px solid #fff; border-radius: 6px; padding: 2px 6px; font-size: 10px; margin-left: 5px; }
+        .copy-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .tag { background: #333; color: var(--accent); padding: 3px 8px; border-radius: 4px; font-size: 11px; margin-right: 5px; }
-
-        .video-wrapper {
-            position: relative; padding-bottom: 56.25%; height: 0;
-            border-radius: 8px; overflow: hidden; background: #000;
-        }
-        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-        .copy-btn { background: none; border: none; color: var(--accent); cursor: pointer; }
+        .rule-box { border-radius: 15px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); }
     </style>
 </head>
 <body>
 
-    <div class="snow-toggle">
-        <label><input type="checkbox" id="lessSnow"> Less Snow</label>
-    </div>
-
     <canvas id="snow-canvas"></canvas>
 
-    <div class="container">
-        <div class="main-title">Challengegrind ICL</div>
+    <h1>Challengegrind ICL</h1>
+    <div style="color: #888; margin-bottom: 40px; text-align: center;">Owned by @verycoolprofile</div>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="openTab('list', this)">LIST</button>
-            <button class="tab-btn" onclick="openTab('rules', this)">RULES</button>
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="openTab('list', this)">List</button>
+        <button class="tab-btn" onclick="openTab('rules', this)">Rules</button>
+    </div>
+
+    <div id="list" class="tab-content active">
+        <div id="levels-list"></div>
+    </div>
+
+    <div id="rules" class="tab-content">
+        <div class="rule-box" style="background: linear-gradient(to right, rgba(17, 17, 17, 1), rgba(52, 152, 219, 0.2)); margin-bottom: 20px;">
+            <h3 style="color:#3498db; text-transform:uppercase; margin-top:0;">Правила:</h3>
+            <ul style="list-style:none; padding:0; line-height:2.2;">
+                <li>• Ограничение по <b>CPS: 16</b></li>
+                <li>• Больше <b>3 кликов в 1 фрейме</b> запрещено</li>
+                <li>• TPS минимум <b>240</b></li>
+                <li>• Читы запрещены (кроме <b>TPS Bypass</b>)</li>
+                <li>• TPS выше <b>100к</b> запрещено</li>
+            </ul>
         </div>
 
-        <!-- ВКЛАДКА ЛИСТА -->
-        <div id="list" class="tab-content active">
-            <div id="levels-list"></div>
-        </div>
-
-        <!-- ВКЛАДКА ПРАВИЛ -->
-        <div id="rules" class="tab-content">
-            <div style="background: var(--card-bg); padding: 30px; border-radius: 10px; line-height: 1.6;">
-                <h2>Rules</h2>
-                <ul>
-                    <li>The level must be impossible for a human.</li>
-                    <li>Noclip runs are not accepted as WR.</li>
-                    <li>Macros must be converted 1:1.</li>
-                </ul>
-            </div>
+        <div class="rule-box" style="background: linear-gradient(to left, rgba(17, 17, 17, 1), rgba(52, 152, 219, 0.2));">
+            <h3 style="color:#3498db; text-transform:uppercase; margin-top:0;">Обозначения:</h3>
+            <ul style="list-style:none; padding:0; line-height:1.8;">
+                <li style="margin-bottom: 10px;"><span class="tag">NME</span> — <b>Needs More Estimations</b></li>
+                <li><span class="tag">LTPS</span> — <b>Lowest TPS</b></li>
+            </ul>
         </div>
     </div>
 
     <script>
         const levelsData = [
-            { "name": "HOCOK B CMETAHE", "author": "mulpik", "id": "138638436", "bg": "HOCOKBCMETAHE.webp", "wr": "None", "min": "2%", "tps": "9999", "youtubeId": "r8gZdilpu5Q", "tags": ["NME"] },
-            { "name": "Goddamn", "author": "Oiloogd", "id": "131023546", "bg": "Goddamn.webp", "wr": "None", "min": "2%", "tps": "12193", "youtubeId": "rOPAKjEsFKY" },
+            { 
+                "name": "HOCOK B CMETAHE", 
+                "author": "mulpik", 
+                "id": "138638436", 
+                "bg": "banners/HOCOKBCMETAHE.webp", 
+                "wr": "None", 
+                "min": "2%", 
+                "tps": "9999", 
+                "youtubeId": "r8gZdilpu5Q", 
+                "tags": ["NME"] 
+            },
+            { "name": "Goddamn", "author": "Oiloogd", "id": "131023546", "bg": "banners/Goddamn.webp", "wr": "None", "min": "2%", "tps": "12193", "youtubeId": "rOPAKjEsFKY" },
             { "name": "Mig Never Clear", "author": "verycoolprofile", "id": "138844086", "bg": "", "wr": "88%", "min": "88%", "tps": "240", "youtubeId": "0CgbdftJW8o", "tags": ["NME"] },
             { "name": "Babydoll Perfect", "author": "TururuTuturu", "id": "134223826", "bg": "", "wr": "12% by Pyro", "min": "13%", "tps": "333", "youtubeId": "Ao-eX3jhOUo" },
             { "name": "Luua", "author": "GmedeChubaka", "id": "135797546", "bg": "", "wr": "65% by Pyro", "min": "65%", "tps": "4944", "youtubeId": "none" },
@@ -152,96 +164,76 @@
             container.innerHTML = '';
             data.forEach((level, index) => {
                 const rank = index + 1;
-                const anim = level.bg ? `banners/${level.bg}` : '';
-                const stat = level.bg ? `banners/static/${level.bg.replace('.webp', '.png')}` : '';
+                const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+                const bgStyle = level.bg ? `style="background-image: url('${level.bg}');"` : '';
                 
                 const card = document.createElement('div');
-                card.className = `level-card`;
-                card.dataset.yt = level.youtubeId;
-                card.dataset.anim = anim;
-                card.dataset.static = stat;
-                
+                card.className = `level-card ${rankClass}`;
                 card.innerHTML = `
-                    <div class="level-header" style="background-image: url('${stat}')" 
-                         onclick="toggleLevel(this.parentElement)"
-                         onmouseenter="playAnim(this)" onmouseleave="stopAnim(this)">
-                        <div class="header-info">
-                            <div class="level-number">${rank}</div>
+                    <div class="level-header" ${bgStyle} onclick="toggleLevel(this.parentElement)">
+                        <div style="display:flex; align-items:center; gap:15px; position:relative;">
+                            <div class="level-number">${rank}.</div>
                             <div>
-                                <div style="font-size:20px; font-weight:bold;">${level.name}</div>
-                                <div style="color:#aaa; font-size:14px;">by ${level.author}</div>
+                                <div style="font-size:18px; font-weight:900; text-shadow: 2px 2px 5px rgba(0,0,0,1);">${level.name}</div>
+                                <div style="color:#ccc; font-size:13px; text-shadow: 1px 1px 3px rgba(0,0,0,1);">by ${level.author}</div>
                             </div>
                         </div>
-                        <div style="position:relative; z-index:2; font-size:12px;">
-                            ID: ${level.id} <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('${level.id}', this)">📋</button>
+                        <div style="font-size:11px; position:relative; text-shadow: 1px 1px 3px rgba(0,0,0,1); color: rgba(255,255,255,0.7);">
+                            ID: ${level.id}
+                            <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('${level.id}', this)">📋</button>
                         </div>
                     </div>
                     <div class="level-content">
                         <div class="stats-grid">
-                            <div><b>WR:</b> ${level.wr} | <b>Min:</b> ${level.min}</div>
-                            <div>${level.tags ? level.tags.map(t => `<span class="tag">${t}</span>`).join('') : ''} <b>TPS:</b> ${level.tps}</div>
+                            <div>WR: ${level.wr} | Min: ${level.min}</div>
+                            <div>${level.tags ? level.tags.map(t => `<span class="tag">${t}</span>`).join('') : ''} TPS: ${level.tps}</div>
                         </div>
-                        <div class="video-container"></div>
+                        ${level.youtubeId !== "none" ? `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${level.youtubeId}" frameborder="0" allowfullscreen></iframe></div>` : '<p style="text-align:center; color:#555;">Видео нет</p>'}
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function playAnim(h) { const a = h.parentElement.dataset.anim; if(a) h.style.backgroundImage = `url('${a}')`; }
-        function stopAnim(h) { const s = h.parentElement.dataset.static; if(s) h.style.backgroundImage = `url('${s}')`; }
-
         function toggleLevel(card) {
             const isActive = card.classList.contains('active');
-            const yt = card.dataset.yt;
-            document.querySelectorAll('.level-card').forEach(c => { 
-                c.classList.remove('active'); 
-                c.querySelector('.video-container').innerHTML = ''; 
-            });
-            if (!isActive) {
-                card.classList.add('active');
-                if (yt && yt !== "none") {
-                    card.querySelector('.video-container').innerHTML = `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${yt}?autoplay=1" frameborder="0" allowfullscreen></iframe></div>`;
-                }
-            }
+            document.querySelectorAll('.level-card').forEach(c => c.classList.remove('active'));
+            if (!isActive) card.classList.add('active');
         }
 
-        function openTab(id, btn) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text);
+            btn.innerHTML = '✓';
+            setTimeout(() => btn.innerHTML = '📋', 1000);
+        }
+
+        function openTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
         }
 
-        function copyToClipboard(t, b) { navigator.clipboard.writeText(t); b.innerHTML = '✓'; setTimeout(() => b.innerHTML = '📋', 1000); }
-
-        // Снег с настройкой
+        // Снег
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
-        const toggle = document.getElementById('lessSnow');
         let flakes = [];
-
         function initSnow() {
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            const count = toggle.checked ? 15 : 60; // Настройка количества
-            flakes = Array.from({length: count}, () => ({
+            flakes = Array.from({length: 100}, () => ({
                 x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-                size: Math.random() * 3 + 1, speed: Math.random() * 1 + 0.5, opacity: Math.random() * 0.5
+                size: Math.random() * 3 + 1, speed: Math.random() * 1 + 0.5, opacity: Math.random()
             }));
         }
-
         function drawSnow() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'white';
             flakes.forEach(f => {
-                ctx.globalAlpha = f.opacity;
+                ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`;
                 ctx.beginPath(); ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2); ctx.fill();
                 f.y += f.speed; if (f.y > canvas.height) f.y = -5;
             });
             requestAnimationFrame(drawSnow);
         }
-
-        toggle.addEventListener('change', initSnow);
         window.onresize = initSnow;
         initSnow(); drawSnow(); renderLevels(levelsData);
     </script>
