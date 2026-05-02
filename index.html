@@ -72,11 +72,11 @@
             cursor: pointer;
             position: relative;
             z-index: 1;
-            background-size: cover; 
-            background-position: center;
-            background-repeat: no-repeat;
+            background-size: cover !important; 
+            background-position: center center !important;
+            background-repeat: no-repeat !important;
             image-rendering: -webkit-optimize-contrast;
-            transition: background-image 0.2s ease;
+            transition: none; 
         }
 
         .level-header::before {
@@ -163,6 +163,8 @@
             { "name": "Nine Circles of CEX II", "author": "Itzbatlix", "id": "135438326", "bg": "", "wr": "19% by MTSgmd", "min": "???", "tps": "???", "youtubeId": "none" }
         ];
 
+// В функции renderLevels замени формирование переменной bgStyle и вызов функций:
+
         function renderLevels(data) {
             const container = document.getElementById('levels-list');
             container.innerHTML = '';
@@ -170,17 +172,18 @@
                 const rank = index + 1;
                 const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
                 
-                // Пути:banners/name.webp и banners/static/name.png
                 const animImg = level.bg ? `banners/${level.bg}` : '';
                 const staticImg = level.bg ? `banners/static/${level.bg.replace('.webp', '.png')}` : '';
-                const bgStyle = staticImg ? `style="background-image: url('${staticImg}');"` : '';
+                
+                // Принудительно задаем позиционирование здесь
+                const bgStyle = staticImg ? `style="background-image: url('${staticImg}'); background-position: center center; background-size: cover;"` : '';
                 
                 const card = document.createElement('div');
                 card.className = `level-card ${rankClass}`;
                 card.dataset.yt = level.youtubeId;
                 card.dataset.anim = animImg;
                 card.dataset.static = staticImg;
-
+        
                 card.innerHTML = `
                     <div class="level-header" ${bgStyle} 
                          onclick="toggleLevel(this.parentElement)"
@@ -209,15 +212,23 @@
                 container.appendChild(card);
             });
         }
-
-        // Функции для ГИФОК при наведении
+        
         function playGif(header) {
             const anim = header.parentElement.dataset.anim;
-            if(anim) header.style.backgroundImage = `url('${anim}')`;
+            if(anim) {
+                header.style.backgroundImage = `url('${anim}')`;
+                header.style.backgroundSize = "cover";
+                header.style.backgroundPosition = "center center";
+            }
         }
+        
         function stopGif(header) {
             const static = header.parentElement.dataset.static;
-            if(static) header.style.backgroundImage = `url('${static}')`;
+            if(static) {
+                header.style.backgroundImage = `url('${static}')`;
+                header.style.backgroundSize = "cover";
+                header.style.backgroundPosition = "center center";
+            }
         }
 
         // Ленивая загрузка видео
