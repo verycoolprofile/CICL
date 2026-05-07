@@ -49,13 +49,14 @@
         .tab-content { display: none; width: 100%; max-width: 800px; z-index: 2; padding: 0 20px 40px 20px; box-sizing: border-box; }
         .tab-content.active { display: block; }
 
-        h1 { text-transform: uppercase; letter-spacing: 3px; font-style: italic; text-shadow: 0 0 15px #3498db; text-align: center; }
+        h1 { text-transform: uppercase; letter-spacing: 3px; font-style: italic; text-shadow: 0 0 15px #3498db; text-align: center; margin-bottom: 5px; }
 
+        /* КАРТОЧКА */
         .level-card {
             background: rgba(255, 255, 255, 0.03); 
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 12px; margin-bottom: 15px; overflow: hidden;
-            transition: border 0.3s; 
+            transition: border 0.3s, transform 0.2s; 
             position: relative;
             backdrop-filter: blur(5px);
         }
@@ -68,23 +69,28 @@
             padding: 20px; display: flex; align-items: center; 
             justify-content: space-between; cursor: pointer;
             position: relative; z-index: 1;
-            min-height: 90px;
+            min-height: 95px;
             box-sizing: border-box;
-            background-size: cover !important; 
-            background-position: center !important;
-            background-repeat: no-repeat !important;
+            overflow: hidden;
         }
 
-        /* КОНТЕЙНЕР ДЛЯ ГИФКИ (чтобы управлять воспроизведением) */
+        /* ГИФ ФОН */
         .card-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0; object-fit: cover;
-            opacity: 0.6; /* Регулируй прозрачность тут */
-            transition: opacity 0.3s;
+            opacity: 0.4;
+            filter: grayscale(100%) brightness(0.5);
+            transition: opacity 0.4s, filter 0.4s;
+            pointer-events: none;
         }
 
-        /* Фильтр для текста */
-        .level-header::before {
+        .level-card:hover .card-bg {
+            opacity: 1;
+            filter: grayscale(0%) brightness(1);
+        }
+
+        /* Градиент поверх гифки для читаемости текста */
+        .level-header::after {
             content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: linear-gradient(90deg, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.2) 100%);
             z-index: 1;
@@ -97,25 +103,26 @@
         .rank-2 .level-number { color: #c0c0c0; }
         .rank-3 .level-number { color: #cd7f32; }
 
+        /* КОНТЕНТ */
         .level-content { 
             max-height: 0; opacity: 0; 
             transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease; 
-            background: rgba(0, 0, 0, 0.85); 
+            background: rgba(0, 0, 0, 0.9); 
             overflow: hidden; 
-            position: relative; z-index: 2;
         }
 
         .level-card.active .level-content { 
-            max-height: 600px; opacity: 1; padding: 20px;
+            max-height: 800px; opacity: 1; padding: 20px;
             transition: max-height 0.4s ease-in-out, opacity 0.5s ease;
         }
 
-        .stats-grid { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px; }
-        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; background: #000; }
+        .stats-grid { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px; color: #eee; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 8px; overflow: hidden; background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
-        .tag { background: #000; border: 1px solid #fff; border-radius: 6px; padding: 2px 6px; font-size: 10px; margin-left: 5px; }
-        .copy-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .tag { background: rgba(52, 152, 219, 0.2); border: 1px solid #3498db; border-radius: 4px; padding: 1px 5px; font-size: 10px; margin-left: 5px; color: #3498db; }
+        .copy-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .copy-btn:hover { background: rgba(255,255,255,0.2); }
         .rule-box { border-radius: 15px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); }
     </style>
 </head>
@@ -140,7 +147,7 @@
     </div>
 
     <div id="rules" class="tab-content">
-        <div class="rule-box" style="background: linear-gradient(to right, rgba(17, 17, 17, 1), rgba(52, 152, 219, 0.2)); margin-bottom: 20px;">
+        <div class="rule-box" style="background: linear-gradient(to right, rgba(17, 17, 17, 1), rgba(52, 152, 219, 0.2));">
             <h3 style="color:#3498db; text-transform:uppercase; margin-top:0;">Правила:</h3>
             <ul style="list-style:none; padding:0; line-height:2.2;">
                 <li>• Ограничение по <b>CPS: 16</b></li>
@@ -165,6 +172,7 @@
             { "name": "If p2p was 2p", "author": "Itzbatlix", "id": "135743274", "bg": "", "wr": "None", "min": "None %", "tps": "Unknown", "youtubeId": "none", "tags": ["NME"] },
             { "name": "RRRR", "author": "levkalevka", "id": "135543215", "bg": "", "wr": "None", "min": "7%", "tps": "Unknown", "youtubeId": "none", "tags": ["NME"] },
             { "name": "Shadow Empathy", "author": "Mrnekrongd", "id": "135624161", "bg": "", "wr": "None", "min": "7%", "tps": "Unknown", "youtubeId": "none", "tags": ["NME"] },
+            { "name": "Nine Circles of P2P", "author": "Itzbatlix", "id": "135634595", "bg": "", "wr": "52%", "min": "53%", "tps": "Unknown", "youtubeId": "none" },
             { "name": "Nine Circles of CEX II", "author": "Itzbatlix", "id": "135438326", "bg": "", "wr": "19% by MTSgmd", "min": "Unknown", "tps": "Unknown", "youtubeId": "none" }
         ];
 
@@ -182,7 +190,7 @@
 
                 card.innerHTML = `
                     <div class="level-header" onclick="toggleLevel(this.parentElement)">
-                        ${gifPath ? `<img src="${gifPath}" class="card-bg" onload="stopGif(this)">` : ''}
+                        ${gifPath ? `<img src="${gifPath}" class="card-bg">` : ''}
                         <div style="display:flex; align-items:center; gap:15px;">
                             <div class="level-number">${rank}.</div>
                             <div>
@@ -203,40 +211,22 @@
                         <div class="video-container"></div>
                     </div>
                 `;
-
-                // Слушатели для имитации паузы/старта гифки
-                const header = card.querySelector('.level-header');
-                const img = card.querySelector('.card-bg');
-                
-                if (img) {
-                    header.onmouseenter = () => playGif(img);
-                    header.onmouseleave = () => stopGif(img);
-                }
-
                 container.appendChild(card);
             });
         }
 
-        // Хак для "остановки" гифки: перезаписываем src тем же самым, что сбрасывает анимацию
-        function stopGif(img) {
-            const currentSrc = img.src;
-            img.src = '';
-            img.src = currentSrc;
-            img.style.opacity = "0.6";
-        }
-
-        function playGif(img) {
-            img.style.opacity = "1";
-        }
-
         function toggleLevel(card) {
             const isActive = card.classList.contains('active');
+            
+            // Закрываем другие карточки
             document.querySelectorAll('.level-card').forEach(c => {
                 if(c !== card) {
                     c.classList.remove('active');
-                    setTimeout(() => { if(!c.classList.contains('active')) c.querySelector('.video-container').innerHTML = ''; }, 400);
+                    const vc = c.querySelector('.video-container');
+                    if(vc) vc.innerHTML = '';
                 }
             });
+
             if (!isActive) {
                 card.classList.add('active');
                 const videoContainer = card.querySelector('.video-container');
@@ -246,37 +236,64 @@
                 }
             } else {
                 card.classList.remove('active');
+                setTimeout(() => {
+                    if(!card.classList.contains('active')) card.querySelector('.video-container').innerHTML = '';
+                }, 400);
             }
         }
 
-        function copyToClipboard(text, btn) { navigator.clipboard.writeText(text); btn.innerHTML = '✓'; setTimeout(() => btn.innerHTML = '📋', 1000); }
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                btn.innerHTML = '✓';
+                setTimeout(() => btn.innerHTML = '📋', 1000);
+            });
+        }
+
         function openTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active'); btn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
         }
 
         // Снег
-        const canvas = document.getElementById('snow-canvas'); const ctx = canvas.getContext('2d');
-        const snowOpt = document.getElementById('optimize-snow'); let flakes = [];
+        const canvas = document.getElementById('snow-canvas');
+        const ctx = canvas.getContext('2d');
+        const snowOpt = document.getElementById('optimize-snow');
+        let flakes = [];
+
         function initSnow() {
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            const count = snowOpt.checked ? 20 : 100;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const count = snowOpt.checked ? 25 : 120;
             flakes = Array.from({length: count}, () => ({
-                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-                size: Math.random() * 3 + 1, speed: Math.random() * 1 + 0.5, opacity: Math.random()
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 3 + 1,
+                speed: Math.random() * 1 + 0.5,
+                opacity: Math.random() * 0.5 + 0.2
             }));
         }
+
         function drawSnow() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             flakes.forEach(f => {
-                ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`; ctx.beginPath(); ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2); ctx.fill();
-                f.y += f.speed; if (f.y > canvas.height) f.y = -5;
+                ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`;
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+                ctx.fill();
+                f.y += f.speed;
+                if (f.y > canvas.height) f.y = -5;
             });
             requestAnimationFrame(drawSnow);
         }
-        snowOpt.addEventListener('change', initSnow); window.onresize = initSnow;
-        initSnow(); drawSnow(); renderLevels(levelsData);
+
+        window.addEventListener('resize', initSnow);
+        snowOpt.addEventListener('change', initSnow);
+
+        initSnow();
+        drawSnow();
+        renderLevels(levelsData);
     </script>
 </body>
 </html>
