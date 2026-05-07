@@ -51,12 +51,11 @@
 
         h1 { text-transform: uppercase; letter-spacing: 3px; font-style: italic; text-shadow: 0 0 15px #3498db; text-align: center; }
 
-        /* КАРТОЧКА */
         .level-card {
             background: rgba(255, 255, 255, 0.03); 
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 12px; margin-bottom: 15px; overflow: hidden;
-            transition: border 0.3s, box-shadow 0.3s; 
+            transition: border 0.3s; 
             position: relative;
             backdrop-filter: blur(5px);
         }
@@ -69,39 +68,45 @@
             padding: 20px; display: flex; align-items: center; 
             justify-content: space-between; cursor: pointer;
             position: relative; z-index: 1;
-            min-height: 90px; /* Фиксированная высота для стабильности фона */
+            min-height: 90px;
             box-sizing: border-box;
             background-size: cover !important; 
             background-position: center !important;
             background-repeat: no-repeat !important;
-            transition: none !important; /* Мгновенная смена картинки */
         }
 
-        /* Затемнение хедера для читаемости */
+        /* КОНТЕЙНЕР ДЛЯ ГИФКИ (чтобы управлять воспроизведением) */
+        .card-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; object-fit: cover;
+            opacity: 0.6; /* Регулируй прозрачность тут */
+            transition: opacity 0.3s;
+        }
+
+        /* Фильтр для текста */
         .level-header::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(90deg, rgba(5, 5, 5, 0.85) 0%, rgba(5, 5, 5, 0.3) 100%);
-            z-index: -1;
+            background: linear-gradient(90deg, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.2) 100%);
+            z-index: 1;
         }
+        
+        .level-header > div { position: relative; z-index: 2; }
 
         .level-number { font-size: 28px; font-weight: 900; color: #3498db; min-width: 50px; }
         .rank-1 .level-number { color: #ffd700; }
         .rank-2 .level-number { color: #c0c0c0; }
         .rank-3 .level-number { color: #cd7f32; }
 
-        /* ПЛАВНАЯ АНИМАЦИЯ КОНТЕНТА */
         .level-content { 
-            max-height: 0; 
-            opacity: 0; 
+            max-height: 0; opacity: 0; 
             transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease; 
-            background: rgba(0, 0, 0, 0.8); 
+            background: rgba(0, 0, 0, 0.85); 
             overflow: hidden; 
+            position: relative; z-index: 2;
         }
 
         .level-card.active .level-content { 
-            max-height: 600px; 
-            opacity: 1; 
-            padding: 20px;
+            max-height: 600px; opacity: 1; padding: 20px;
             transition: max-height 0.4s ease-in-out, opacity 0.5s ease;
         }
 
@@ -169,22 +174,15 @@
             data.forEach((level, index) => {
                 const rank = index + 1;
                 const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
-                
-                const animImg = level.bg ? `banners/${level.bg}` : '';
-                const staticImg = level.bg ? `banners/static/${level.bg.replace('.webp', '.png')}` : '';
+                const gifPath = level.bg ? `banners/${level.bg}` : '';
                 
                 const card = document.createElement('div');
                 card.className = `level-card ${rankClass}`;
                 card.dataset.yt = level.youtubeId;
-                card.dataset.anim = animImg;
-                card.dataset.static = staticImg;
 
                 card.innerHTML = `
-                    <div class="level-header" 
-                         style="background-image: url('${staticImg || ''}')"
-                         onmouseenter="playGif(this)" 
-                         onmouseleave="stopGif(this)"
-                         onclick="toggleLevel(this.parentElement)">
+                    <div class="level-header" onclick="toggleLevel(this.parentElement)">
+                        ${gifPath ? `<img src="${gifPath}" class="card-bg" onload="stopGif(this)">` : ''}
                         <div style="display:flex; align-items:center; gap:15px;">
                             <div class="level-number">${rank}.</div>
                             <div>
@@ -192,7 +190,7 @@
                                 <div style="color:#ccc; font-size:13px; text-shadow: 1px 1px 3px #000;">by ${level.author}</div>
                             </div>
                         </div>
-                        <div style="font-size:11px; text-shadow: 1px 1px 3px #000; position:relative; z-index:2;">
+                        <div style="font-size:11px; text-shadow: 1px 1px 3px #000;">
                             ID: ${level.id}
                             <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('${level.id}', this)">📋</button>
                         </div>
@@ -205,32 +203,40 @@
                         <div class="video-container"></div>
                     </div>
                 `;
+
+                // Слушатели для имитации паузы/старта гифки
+                const header = card.querySelector('.level-header');
+                const img = card.querySelector('.card-bg');
+                
+                if (img) {
+                    header.onmouseenter = () => playGif(img);
+                    header.onmouseleave = () => stopGif(img);
+                }
+
                 container.appendChild(card);
             });
         }
 
-        function playGif(header) {
-            const anim = header.parentElement.dataset.anim;
-            if(anim) header.style.backgroundImage = `url('${anim}')`;
+        // Хак для "остановки" гифки: перезаписываем src тем же самым, что сбрасывает анимацию
+        function stopGif(img) {
+            const currentSrc = img.src;
+            img.src = '';
+            img.src = currentSrc;
+            img.style.opacity = "0.6";
         }
 
-        function stopGif(header) {
-            const static = header.parentElement.dataset.static;
-            if(static) header.style.backgroundImage = `url('${static}')`;
+        function playGif(img) {
+            img.style.opacity = "1";
         }
 
         function toggleLevel(card) {
             const isActive = card.classList.contains('active');
-            
             document.querySelectorAll('.level-card').forEach(c => {
                 if(c !== card) {
                     c.classList.remove('active');
-                    setTimeout(() => {
-                        if(!c.classList.contains('active')) c.querySelector('.video-container').innerHTML = '';
-                    }, 400);
+                    setTimeout(() => { if(!c.classList.contains('active')) c.querySelector('.video-container').innerHTML = ''; }, 400);
                 }
             });
-
             if (!isActive) {
                 card.classList.add('active');
                 const videoContainer = card.querySelector('.video-container');
@@ -244,16 +250,15 @@
         }
 
         function copyToClipboard(text, btn) { navigator.clipboard.writeText(text); btn.innerHTML = '✓'; setTimeout(() => btn.innerHTML = '📋', 1000); }
-        
         function openTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active'); btn.classList.add('active');
         }
 
+        // Снег
         const canvas = document.getElementById('snow-canvas'); const ctx = canvas.getContext('2d');
         const snowOpt = document.getElementById('optimize-snow'); let flakes = [];
-        
         function initSnow() {
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             const count = snowOpt.checked ? 20 : 100;
@@ -262,7 +267,6 @@
                 size: Math.random() * 3 + 1, speed: Math.random() * 1 + 0.5, opacity: Math.random()
             }));
         }
-        
         function drawSnow() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             flakes.forEach(f => {
@@ -271,7 +275,6 @@
             });
             requestAnimationFrame(drawSnow);
         }
-        
         snowOpt.addEventListener('change', initSnow); window.onresize = initSnow;
         initSnow(); drawSnow(); renderLevels(levelsData);
     </script>
